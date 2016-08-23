@@ -3,7 +3,7 @@ using UnityEngine.Rendering;
 
 namespace Kvant
 {
-    [ExecuteInEditMode, AddComponentMenu("Kvant/Wig")]
+    [ExecuteInEditMode, AddComponentMenu("Kvant/Wig Renderer")]
     public class WigRenderer : MonoBehaviour
     {
         #region Editable properties
@@ -15,10 +15,10 @@ namespace Kvant
         bool _receiveShadows = false;
 
         [SerializeField]
-        Mesh _templateMesh;
+        Texture2D _foundation;
 
         [SerializeField]
-        Texture2D _skinTexture;
+        Mesh _template;
 
         [SerializeField]
         float _randomSeed;
@@ -51,7 +51,7 @@ namespace Kvant
         RenderTexture CreateBuffer()
         {
             var format = RenderTextureFormat.ARGBFloat;
-            var width = _skinTexture.width;
+            var width = _foundation.width;
             var buffer = new RenderTexture(width, 32, 0, format);
             buffer.hideFlags = HideFlags.DontSave;
             buffer.filterMode = FilterMode.Point;
@@ -75,7 +75,7 @@ namespace Kvant
         void UpdateKernelParameters(float deltaTime)
         {
             var m = _kernelMaterial;
-            m.SetTexture("_SkinTex", _skinTexture);
+            m.SetTexture("_FoundationTex", _foundation);
             m.SetMatrix("_Transform", transform.localToWorldMatrix);
             m.SetFloat("_DeltaTime", deltaTime);
             m.SetFloat("_RandomSeed", _randomSeed);
@@ -148,10 +148,10 @@ namespace Kvant
             InvokeKernels(Time.deltaTime);
 
             _hairMaterial.SetTexture("_PositionTex", _positionBuffer2);
-            _hairMaterial.SetTexture("_SkinTex", _skinTexture);
+            _hairMaterial.SetTexture("_FoundationTex", _foundation);
 
             Graphics.DrawMesh(
-                _templateMesh, Matrix4x4.identity, _hairMaterial, gameObject.layer,
+                _template, Matrix4x4.identity, _hairMaterial, gameObject.layer,
                 null, 0, null, _castShadows, _receiveShadows
             );
         }

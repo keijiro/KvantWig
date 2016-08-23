@@ -238,8 +238,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _castShadows: 1
   _receiveShadows: 1
-  _templateMesh: {fileID: 4300000, guid: 8addf51e538d5bc40b2c348f53a7e668, type: 2}
-  _skinTexture: {fileID: 2800000, guid: b1eeaca7eb38c224e93b7d88ccb26005, type: 2}
+  _foundation: {fileID: 2800000, guid: cad45b42ede708c4ca167f19cf4bd1c9, type: 2}
+  _template: {fileID: 4300000, guid: eca206b32fc9b1c459d176ebe5c3c1fa, type: 2}
   _randomSeed: 0
   _kernelShader: {fileID: 4800000, guid: c91a1514fa253694b9c31e72a147c2e6, type: 3}
   _hairShader: {fileID: 4800000, guid: 5976ea646a28dd34ca270c7f10efbbed, type: 3}

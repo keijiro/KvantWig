@@ -4,7 +4,7 @@ Shader "Hidden/Kvant/Wig/Kernel"
     {
         _PositionTex("", 2D) = ""{}
         _VelocityTex("", 2D) = ""{}
-        _SkinTex("", 2D) = ""{}
+        _FoundationTex("", 2D) = ""{}
     }
 
     CGINCLUDE
@@ -17,7 +17,7 @@ Shader "Hidden/Kvant/Wig/Kernel"
     sampler2D _VelocityTex;
     float4 _VelocityTex_TexelSize;
 
-    sampler2D _SkinTex;
+    sampler2D _FoundationTex;
 
     float4x4 _Transform;
     float _DeltaTime;
@@ -35,35 +35,35 @@ Shader "Hidden/Kvant/Wig/Kernel"
         return tex2D(_VelocityTex, uv).xyz;
     }
 
-    float4 SampleSkinPosition(float2 uv)
+    float4 SampleFoundationPosition(float2 uv)
     {
-        float3 p = tex2D(_SkinTex, float2(uv.x, 0)).xyz;
+        float3 p = tex2D(_FoundationTex, float2(uv.x, 0)).xyz;
         return mul(_Transform, float4(p, 1));
     }
 
-    float3 SampleSkinNormal(float2 uv)
+    float3 SampleFoundationNormal(float2 uv)
     {
-        float3 n = tex2D(_SkinTex, float2(uv.x, 1)).xyz;
+        float3 n = tex2D(_FoundationTex, float2(uv.x, 1)).xyz;
         return mul((float3x3)_Transform, n);
     }
 
     float4 frag_InitPosition(v2f_img i) : SV_Target
     {
-        float4 p = SampleSkinPosition(i.uv);
-        p.xyz += SampleSkinNormal(i.uv) * i.uv.y;
+        float4 p = SampleFoundationPosition(i.uv);
+        p.xyz += SampleFoundationNormal(i.uv) * i.uv.y;
         return p;
     }
 
     float4 frag_InitVelocity(v2f_img i) : SV_Target
     {
-        return float4(SampleSkinNormal(i.uv), 0);
+        return float4(SampleFoundationNormal(i.uv), 0);
     }
 
     float4 frag_UpdatePosition(v2f_img i) : SV_Target
     {
         if (i.uv.y < _PositionTex_TexelSize.y)
         {
-            return SampleSkinPosition(i.uv);
+            return SampleFoundationPosition(i.uv);
         }
         else
         {
@@ -86,7 +86,7 @@ Shader "Hidden/Kvant/Wig/Kernel"
         v *= exp(-8 * _DeltaTime);
 
         v += float3(0, -6, 2) * _DeltaTime;
-        v += SampleSkinNormal(i.uv) * 8 * _DeltaTime;
+        v += SampleFoundationNormal(i.uv) * 8 * _DeltaTime;
 
         v = normalize(v) * min(length(v), 1);
 

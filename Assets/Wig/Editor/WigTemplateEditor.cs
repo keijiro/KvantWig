@@ -4,7 +4,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Wig
+namespace Kvant
 {
     public class WigTemplateEditor
     {
@@ -19,25 +19,25 @@ namespace Wig
             return AssetDatabase.GenerateUniqueAssetPath(filePath);
         }
 
-        [MenuItem("Assets/Wig/Convert To Template", true)]
+        [MenuItem("Assets/Kvant/Wig/Convert To Template", true)]
         static bool ValidateConvertToTemplate()
         {
             return SelectedMeshes.Length > 0;
         }
 
-        [MenuItem("Assets/Wig/Convert To Template")]
+        [MenuItem("Assets/Kvant/Wig/Convert To Template")]
         static void ConvertToTemplate()
         {
             foreach (Mesh mesh in SelectedMeshes)
             {
-                var skinTexture = CreateSkinTexture(mesh);
-                var template = CreateTemplateMesh(skinTexture.width, 32);
-                AssetDatabase.CreateAsset(skinTexture, NewFileName(mesh, "Skin"));
+                var foundation = CreateFoundation(mesh);
+                var template = CreateTemplate(foundation.width, 32);
+                AssetDatabase.CreateAsset(foundation, NewFileName(mesh, "Foundation"));
                 AssetDatabase.CreateAsset(template, NewFileName(mesh, "Template"));
             }
         }
 
-        static Texture2D CreateSkinTexture(Mesh source)
+        static Texture2D CreateFoundation(Mesh source)
         {
             var inVertices = source.vertices;
             var inNormals = source.normals;
@@ -56,6 +56,9 @@ namespace Wig
 
             var tex = new Texture2D(outVertices.Count, 2, TextureFormat.RGBAFloat, false);
 
+            tex.filterMode = FilterMode.Point;
+            tex.wrapMode = TextureWrapMode.Clamp;
+
             for (var i = 0; i < outVertices.Count; i++)
             {
                 var v = outVertices[i];
@@ -69,7 +72,7 @@ namespace Wig
             return tex;
         }
 
-        static Mesh CreateTemplateMesh(int vcount, int length)
+        static Mesh CreateTemplate(int vcount, int length)
         {
             var vertices = new List<Vector3>(vcount * length);
             var indices = new List<int>(vcount * (length - 1) * 2);
