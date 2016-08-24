@@ -18,6 +18,7 @@ Shader "Hidden/Kvant/Wig/Kernel"
     float4 _VelocityTex_TexelSize;
 
     sampler2D _FoundationTex;
+    float4 _FoundationTex_TexelSize;
 
     float4x4 _Transform;
     float _DeltaTime;
@@ -73,22 +74,29 @@ Shader "Hidden/Kvant/Wig/Kernel"
         }
     }
 
+    static const float kSegmentLength = 0.05;
+
     float4 frag_UpdateVelocity(v2f_img i) : SV_Target
     {
-        float3 p0 = SamplePosition(i.uv, -1).xyz;
-        float3 p1 = SamplePosition(i.uv, 0).xyz;
         float3 v = SampleVelocity(i.uv, 0);
 
-        float3 diff = p1 - p0;
-        float3 force = max(length(diff) - 0.0, 0);
+        float3 p0 = SamplePosition(i.uv, -2).xyz;
+        float3 p1 = SamplePosition(i.uv, -1).xyz;
+        float3 p2 = SamplePosition(i.uv, 0).xyz;
 
-        v += normalize(diff) * -force * _DeltaTime * 200;
-        v *= exp(-8 * _DeltaTime);
+        float3 pt = p1 + normalize(p1 - p0) * kSegmentLength;
 
-        v += float3(0, -6, 2) * _DeltaTime;
-        v += SampleFoundationNormal(i.uv) * 8 * _DeltaTime;
+        if (i.uv.y < _PositionTex_TexelSize.y * 2)
+            pt = p1 + SampleFoundationNormal(i.uv) * kSegmentLength;
+        
+        float3 diff = pt - p2;
+        v += diff * _DeltaTime * 400;
 
-        v = normalize(v) * min(length(v), 1);
+        v *= exp(-40 * _DeltaTime);
+
+        v += float3(0, -8, 2) * _DeltaTime;
+
+        v = normalize(v) * min(length(v), 100);
 
         return float4(v, 0);
     }

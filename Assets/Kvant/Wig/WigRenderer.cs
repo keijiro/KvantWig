@@ -145,7 +145,8 @@ namespace Kvant
                 _needsReset = false;
             }
 
-            InvokeKernels(Time.deltaTime);
+            for (var i = 0; i < 10; i++)
+                InvokeKernels(Time.deltaTime / 10);
 
             _hairMaterial.SetTexture("_PositionTex", _positionBuffer2);
             _hairMaterial.SetTexture("_FoundationTex", _foundation);
