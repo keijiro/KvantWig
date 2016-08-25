@@ -14,22 +14,42 @@ Shader "Hidden/Kvant/Wig/Hair"
         half color;
     };
 
+float3 HueToRgb(float h)
+{
+    float r = abs(h * 6 - 3) - 1;
+    float g = 2 - abs(h * 6 - 2);
+    float b = 2 - abs(h * 6 - 4);
+    return saturate(float3(r, g, b));
+}
+
     void vert(inout appdata_full v, out Input data)
     {
         UNITY_INITIALIZE_OUTPUT(Input, data);
 
-        float4 uv = float4(v.vertex.xy, 0, 0);
+        float4 uv = float4(v.texcoord.xy, 0, 0);
 
         float3 pos = tex2Dlod(_PositionTex, uv).xyz;
+        float3 pos2 = tex2Dlod(_PositionTex, uv + float4(0, _PositionTex_TexelSize.y, 0, 0)).xyz;
 
-        v.vertex.xyz = pos.xyz;
+        float3 ax = float3(1, 0, 0);
+        float3 az = normalize(pos2 - pos);
+        float3 ay = normalize(cross(az, ax));
 
-        data.color = 1.5 * (1 - uv.y);
+        float3 vv = v.vertex.x * ax + v.vertex.y * ay + v.vertex.z * az;
+        float3 vn = v.normal.x * ax + v.normal.y * ay + v.normal.z * az;
+
+        v.vertex.xyz = pos.xyz + vv * 0.008 * (1 - uv.y);
+        v.normal = normalize(vn);
+
+        data.color = uv.x;
     }
 
     void surf(Input IN, inout SurfaceOutputStandard o)
     {
-        o.Emission = IN.color;
+        o.Albedo = HueToRgb(frac(IN.color * 3142.213)) * 0.5;
+        o.Smoothness = 0;
+        o.Metallic = 0;
+        o.Emission = o.Albedo * 4 * (frac(IN.color * 314.322 + _Time.y) > 0.9);
     }
 
     ENDCG

@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.2755652, g: 0.2567862, b: 0.26984558, a: 1}
+  m_IndirectSpecularColor: {r: 0.7273706, g: 0.6777988, b: 0.7122793, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -103,6 +103,8 @@ GameObject:
   - 124: {fileID: 118794606}
   - 81: {fileID: 118794605}
   - 114: {fileID: 118794610}
+  - 114: {fileID: 118794611}
+  - 114: {fileID: 118794612}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -196,6 +198,48 @@ MonoBehaviour:
   _highQuality: 1
   _antiFlicker: 0
   _shader: {fileID: 4800000, guid: 5a711a01011934ebcb58ef5ad52159d6, type: 3}
+--- !u!114 &118794611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 118794604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d901ddf32d7c84ed4b0f84623ef3a7a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _intensity: 2.29
+  _radius: 0.3
+  _sampleCount: 3
+  _sampleCountValue: 24
+  _downsampling: 0
+  _occlusionSource: 0
+  _ambientOnly: 0
+  _aoShader: {fileID: 4800000, guid: 7541b5f18b1224a81927d8b1184b122b, type: 3}
+  _quadMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &118794612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 118794604}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c8d76155f53cfc45b4f02922de468b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _subject: {fileID: 0}
+  _distance: 10
+  _fNumber: 1.4
+  _useCameraFov: 1
+  _focalLength: 0.05
+  _maxBlur: 0.03
+  _irisAngle: 0
+  _sampleCount: 1
+  _foregroundBlur: 1
+  _visualize: 0
+  _shader: {fileID: 4800000, guid: b99c58356816f7b46818fe7e788b2fa1, type: 3}
 --- !u!1 &185084983
 GameObject:
   m_ObjectHideFlags: 0
@@ -236,11 +280,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3087f4e94a1f3314bae3657a0f7af3b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _template: {fileID: 11400000, guid: fe6c437ef0768c44ba9f43875536614a, type: 2}
+  _template: {fileID: 11400000, guid: 366b816b4cebb9f45aca51d4e725cfc2, type: 2}
   _castShadows: 1
   _receiveShadows: 1
-  _segmentLength: 0.04
-  _stepDivide: 3
+  _segmentLength: 0.1
+  _stepDivide: 4
   _randomSeed: 0
   _kernelShader: {fileID: 4800000, guid: c91a1514fa253694b9c31e72a147c2e6, type: 3}
   _hairShader: {fileID: 4800000, guid: 5976ea646a28dd34ca270c7f10efbbed, type: 3}
@@ -790,6 +834,10 @@ Prefab:
     - target: {fileID: 13700014, guid: 5c9205ed67a8deb47a2221ff40ba6570, type: 3}
       propertyPath: m_AABB.m_Extent.z
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9500000, guid: 5c9205ed67a8deb47a2221ff40ba6570, type: 3}
+      propertyPath: m_CullingMode
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5c9205ed67a8deb47a2221ff40ba6570, type: 3}

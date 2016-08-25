@@ -140,7 +140,7 @@ namespace Kvant
                 DestroyImmediate(_hairMaterial);
         }
 
-        void Update()
+        void LateUpdate()
         {
             if (_needsReset)
             {

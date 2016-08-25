@@ -20,14 +20,14 @@ namespace Kvant
             get { return _foundation.width; }
         }
 
-        // Foundation texture (read only)
+        /// Foundation texture (read only)
         public Texture2D foundation {
             get { return _foundation; }
         }
 
         [SerializeField] Texture2D _foundation;
 
-        // Tmplate mesh (read only)
+        /// Tmplate mesh (read only)
         public Mesh mesh {
             get { return _mesh; }
         }
@@ -102,8 +102,10 @@ namespace Kvant
             var length = Mathf.Clamp(_segmentCount, 3, 64);
 
             // Create vertex array for the template.
-            var vertices = new List<Vector3>(vcount * length);
-            var indices = new List<int>(vcount * (length - 1) * 2);
+            var vertices = new List<Vector3>();
+            var normals = new List<Vector3>();
+            var uvs = new List<Vector2>();
+            var indices = new List<int>();
 
             for (var i1 = 0; i1 < vcount; i1++)
             {
@@ -111,21 +113,50 @@ namespace Kvant
 
                 for (var i2 = 0; i2 < length; i2++)
                 {
-                    var v = (float)i2 / length;
-                    vertices.Add(new Vector3(u, v, 0));
-                }
+                    var v = (float)i2 / (length - 1);
 
+                    for (var i3 = 0; i3 < 4; i3++)
+                        uvs.Add(new Vector2(u, v));
+
+                    vertices.Add(new Vector3(-1, -1, 0));
+                    vertices.Add(new Vector3(+1, -1, 0));
+                    vertices.Add(new Vector3(+1, +1, 0));
+                    vertices.Add(new Vector3(-1, +1, 0));
+
+                    normals.Add(new Vector3(-1, -1, 0).normalized);
+                    normals.Add(new Vector3(+1, -1, 0).normalized);
+                    normals.Add(new Vector3(+1, +1, 0).normalized);
+                    normals.Add(new Vector3(-1, +1, 0).normalized);
+                }
+            }
+
+            var refi = 0;
+
+            for (var i1 = 0; i1 < vcount; i1++)
+            {
                 for (var i2 = 0; i2 < length - 1; i2++)
                 {
-                    var i = i1 * length + i2;
-                    indices.Add(i);
-                    indices.Add(i + 1);
+                    for (var i3 = 0; i3 < 4; i3++)
+                    {
+                        indices.Add(refi + i3);
+                        indices.Add(refi + ((i3 + 1) % 4));
+                        indices.Add(refi + i3 + 4);
+
+                        indices.Add(refi + ((i3 + 1) % 4));
+                        indices.Add(refi + 4 + ((i3 + 1) % 4));
+                        indices.Add(refi + i3 + 4);
+                    }
+
+                    refi += 4;
                 }
             }
 
             // Reset the mesh asset.
             _mesh.SetVertices(vertices);
-            _mesh.SetIndices(indices.ToArray(), MeshTopology.Lines, 0);
+            _mesh.SetNormals(normals);
+            _mesh.SetUVs(0, uvs);
+            _mesh.SetIndices(indices.ToArray(), MeshTopology.Triangles, 0);
+            _mesh.bounds = new Bounds(Vector3.zero, Vector3.one * 1000);
             _mesh.Optimize();
             _mesh.UploadMeshData(true);
         }
