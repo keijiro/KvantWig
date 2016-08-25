@@ -23,11 +23,12 @@ Shader "Hidden/Kvant/Wig/Kernel"
     float4x4 _Transform;
     float _DeltaTime;
     float _RandomSeed;
+    float _SegmentLength;
 
-    float4 SamplePosition(float2 uv, float delta)
+    float3 SamplePosition(float2 uv, float delta)
     {
         uv += float2(0, _PositionTex_TexelSize.y * delta);
-        return float4(tex2D(_PositionTex, uv).xyz, 1);
+        return tex2D(_PositionTex, uv).xyz;
     }
 
     float3 SampleVelocity(float2 uv, float delta)
@@ -50,53 +51,60 @@ Shader "Hidden/Kvant/Wig/Kernel"
 
     float4 frag_InitPosition(v2f_img i) : SV_Target
     {
-        float4 p = SampleFoundationPosition(i.uv);
-        p.xyz += SampleFoundationNormal(i.uv) * i.uv.y;
-        return p;
+        float3 p = SampleFoundationPosition(i.uv);
+        p += SampleFoundationNormal(i.uv) * i.uv.y;
+        return float4(p, 1);
     }
 
     float4 frag_InitVelocity(v2f_img i) : SV_Target
     {
-        return float4(SampleFoundationNormal(i.uv), 0);
+        float3 n = SampleFoundationNormal(i.uv);
+        return float4(n, 0);
     }
 
     float4 frag_UpdatePosition(v2f_img i) : SV_Target
     {
         if (i.uv.y < _PositionTex_TexelSize.y)
         {
-            return SampleFoundationPosition(i.uv);
+            float3 p = SampleFoundationPosition(i.uv);
+            return float4(p, 1);
         }
         else
         {
-            float4 p = SamplePosition(i.uv, 0);
-            p.xyz += SampleVelocity(i.uv, 0) * _DeltaTime;
-            return p;
+            float3 p = SamplePosition(i.uv, 0);
+            p += SampleVelocity(i.uv, 0) * _DeltaTime;
+
+            float3 p0 = SamplePosition(i.uv, -1);
+            float3 diff = p - p0;
+            float len = length(diff);
+
+            if (len > _SegmentLength)
+                p = p0 + diff / len * _SegmentLength;
+
+            return float4(p, 1);
         }
     }
-
-    static const float kSegmentLength = 0.05;
 
     float4 frag_UpdateVelocity(v2f_img i) : SV_Target
     {
         float3 v = SampleVelocity(i.uv, 0);
 
-        float3 p0 = SamplePosition(i.uv, -2).xyz;
-        float3 p1 = SamplePosition(i.uv, -1).xyz;
-        float3 p2 = SamplePosition(i.uv, 0).xyz;
+        float3 p0 = SamplePosition(i.uv, -3);
+        float3 p1 = SamplePosition(i.uv, -1);
+        float3 p2 = SamplePosition(i.uv, 0);
 
-        float3 pt = p1 + normalize(p1 - p0) * kSegmentLength;
+        float3 pt = p1 + normalize(p1 - p0) * _SegmentLength;
 
         if (i.uv.y < _PositionTex_TexelSize.y * 2)
-            pt = p1 + SampleFoundationNormal(i.uv) * kSegmentLength;
+            pt = p1 + SampleFoundationNormal(i.uv) * _SegmentLength;
+
+        v *= exp(-30 * _DeltaTime);
+        //v = normalize(v) * min(length(v), 400);
         
         float3 diff = pt - p2;
-        v += diff * _DeltaTime * 400;
-
-        v *= exp(-40 * _DeltaTime);
+        v += diff * _DeltaTime * 600;
 
         v += float3(0, -8, 2) * _DeltaTime;
-
-        v = normalize(v) * min(length(v), 100);
 
         return float4(v, 0);
     }

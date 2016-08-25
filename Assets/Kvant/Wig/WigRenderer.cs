@@ -20,6 +20,12 @@ namespace Kvant
         [SerializeField]
         Mesh _template;
 
+        [SerializeField, Range(0.01f, 1.0f)]
+        float _segmentLength = 0.1f;
+
+        [SerializeField, Range(1, 10)]
+        int _stepDivide = 3;
+
         [SerializeField]
         float _randomSeed;
 
@@ -79,6 +85,7 @@ namespace Kvant
             m.SetMatrix("_Transform", transform.localToWorldMatrix);
             m.SetFloat("_DeltaTime", deltaTime);
             m.SetFloat("_RandomSeed", _randomSeed);
+            m.SetFloat("_SegmentLength", _segmentLength);
         }
 
         void ResetState()
@@ -145,8 +152,8 @@ namespace Kvant
                 _needsReset = false;
             }
 
-            for (var i = 0; i < 10; i++)
-                InvokeKernels(Time.deltaTime / 10);
+            for (var i = 0; i < _stepDivide; i++)
+                InvokeKernels(Time.deltaTime / _stepDivide);
 
             _hairMaterial.SetTexture("_PositionTex", _positionBuffer2);
             _hairMaterial.SetTexture("_FoundationTex", _foundation);
