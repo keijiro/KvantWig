@@ -9,16 +9,13 @@ namespace Kvant
         #region Editable properties
 
         [SerializeField]
+        WigTemplate _template;
+
+        [SerializeField]
         ShadowCastingMode _castShadows;
 
         [SerializeField]
         bool _receiveShadows = false;
-
-        [SerializeField]
-        Texture2D _foundation;
-
-        [SerializeField]
-        Mesh _template;
 
         [SerializeField, Range(0.01f, 1.0f)]
         float _segmentLength = 0.1f;
@@ -57,8 +54,8 @@ namespace Kvant
         RenderTexture CreateBuffer()
         {
             var format = RenderTextureFormat.ARGBFloat;
-            var width = _foundation.width;
-            var buffer = new RenderTexture(width, 32, 0, format);
+            var width = _template.filamentCount;
+            var buffer = new RenderTexture(width, _template.segmentCount, 0, format);
             buffer.hideFlags = HideFlags.DontSave;
             buffer.filterMode = FilterMode.Point;
             buffer.wrapMode = TextureWrapMode.Clamp;
@@ -81,7 +78,7 @@ namespace Kvant
         void UpdateKernelParameters(float deltaTime)
         {
             var m = _kernelMaterial;
-            m.SetTexture("_FoundationTex", _foundation);
+            m.SetTexture("_FoundationTex", _template.foundation);
             m.SetMatrix("_Transform", transform.localToWorldMatrix);
             m.SetFloat("_DeltaTime", deltaTime);
             m.SetFloat("_RandomSeed", _randomSeed);
@@ -156,10 +153,10 @@ namespace Kvant
                 InvokeKernels(Time.deltaTime / _stepDivide);
 
             _hairMaterial.SetTexture("_PositionTex", _positionBuffer2);
-            _hairMaterial.SetTexture("_FoundationTex", _foundation);
+            _hairMaterial.SetTexture("_FoundationTex", _template.foundation);
 
             Graphics.DrawMesh(
-                _template, Matrix4x4.identity, _hairMaterial, gameObject.layer,
+                _template.mesh, Matrix4x4.identity, _hairMaterial, gameObject.layer,
                 null, 0, null, _castShadows, _receiveShadows
             );
         }

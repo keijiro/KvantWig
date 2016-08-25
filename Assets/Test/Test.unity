@@ -236,11 +236,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3087f4e94a1f3314bae3657a0f7af3b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _template: {fileID: 11400000, guid: fe6c437ef0768c44ba9f43875536614a, type: 2}
   _castShadows: 1
   _receiveShadows: 1
-  _foundation: {fileID: 2800000, guid: a11726747d5599a43a198f9624a912fb, type: 2}
-  _template: {fileID: 4300000, guid: cc7c538239c058f4dab34dd35e3f900c, type: 2}
   _segmentLength: 0.04
+  _stepDivide: 3
   _randomSeed: 0
   _kernelShader: {fileID: 4800000, guid: c91a1514fa253694b9c31e72a147c2e6, type: 3}
   _hairShader: {fileID: 4800000, guid: 5976ea646a28dd34ca270c7f10efbbed, type: 3}
