@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.22343846, g: 0.20821707, b: 0.21880771, a: 1}
+  m_IndirectSpecularColor: {r: 0.02596205, g: 0.025810258, b: 0.025117498, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -106,7 +106,6 @@ GameObject:
   - 114: {fileID: 118794610}
   - 114: {fileID: 118794616}
   - 114: {fileID: 118794612}
-  - 45: {fileID: 118794613}
   - 114: {fileID: 118794615}
   - 114: {fileID: 118794614}
   m_Layer: 0
@@ -154,7 +153,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 15
   field of view: 9
   orthographic: 0
   orthographic size: 5
@@ -244,14 +243,6 @@ MonoBehaviour:
   _foregroundBlur: 1
   _visualize: 0
   _shader: {fileID: 4800000, guid: b99c58356816f7b46818fe7e788b2fa1, type: 3}
---- !u!45 &118794613
-Skybox:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 118794604}
-  m_Enabled: 1
-  m_CustomSkybox: {fileID: 2100000, guid: 49ae97aa382457d479d4eb3bfc938fcc, type: 2}
 --- !u!114 &118794614
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -436,8 +427,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 7
   m_Type: 1
-  m_Color: {r: 0.9411765, g: 0.98539555, b: 1, a: 1}
-  m_Intensity: 0.95
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 0.45
   m_Range: 10
   m_SpotAngle: 30
   m_CookieSize: 10
@@ -467,10 +458,10 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 220633635}
-  m_LocalRotation: {x: 0.17101003, y: -0.8137978, z: 0.2961981, w: 0.46984628}
+  m_LocalRotation: {x: 0.55403227, y: 0.2120122, z: -0.14845252, w: 0.79124016}
   m_LocalPosition: {x: 0, y: 5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 40, y: -120, z: 0}
+  m_LocalEulerAnglesHint: {x: 70, y: 30, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2

@@ -72,7 +72,7 @@ Material:
     - first:
         name: _Tex
       second:
-        m_Texture: {fileID: 8900000, guid: 74ae7794fd342fa4e9430ccb308f651e, type: 3}
+        m_Texture: {fileID: 8900000, guid: 53f19ae6c28231a46a166563d47492d4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
@@ -114,7 +114,7 @@ Material:
       second: 0.02
     - first:
         name: _Rotation
-      second: 335
+      second: 0
     - first:
         name: _SmoothnessTextureChannel
       second: 0
