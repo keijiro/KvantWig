@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Skybvox
+  m_Name: Environment
   m_Shader: {fileID: 103, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: _EMISSION
   m_LightmapFlags: 1
@@ -90,7 +90,7 @@ Material:
       second: 0
     - first:
         name: _Exposure
-      second: 1.71
+      second: 1
     - first:
         name: _GlossMapScale
       second: 1
