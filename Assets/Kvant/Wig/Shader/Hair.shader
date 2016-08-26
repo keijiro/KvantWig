@@ -31,14 +31,14 @@ float3 HueToRgb(float h)
         float3 pos = tex2Dlod(_PositionTex, uv).xyz;
         float3 pos2 = tex2Dlod(_PositionTex, uv + float4(0, _PositionTex_TexelSize.y, 0, 0)).xyz;
 
-        float3 ax = float3(1, 0, 0);
+        float3 ax = normalize(float3(1, frac(uv.x * 31.492) * 2 - 1, 0));
         float3 az = normalize(pos2 - pos);
         float3 ay = normalize(cross(az, ax));
 
         float3 vv = v.vertex.x * ax + v.vertex.y * ay + v.vertex.z * az;
         float3 vn = v.normal.x * ax + v.normal.y * ay + v.normal.z * az;
 
-        v.vertex.xyz = pos.xyz + vv * 0.008 * (1 - uv.y);
+        v.vertex.xyz = pos.xyz + vv * 0.02 * (1 - uv.y);
         v.normal = normalize(vn);
 
         data.color = uv.x;
@@ -46,10 +46,10 @@ float3 HueToRgb(float h)
 
     void surf(Input IN, inout SurfaceOutputStandard o)
     {
-        o.Albedo = HueToRgb(frac(IN.color * 3142.213)) * 0.5;
-        o.Smoothness = 0;
+        o.Albedo = HueToRgb(frac(IN.color * 3142.213)) * 0.1;
+        o.Smoothness = 0.8;
         o.Metallic = 0;
-        o.Emission = o.Albedo * 4 * (frac(IN.color * 314.322 + _Time.y) > 0.9);
+        o.Emission = o.Albedo * 20 * (frac(IN.color * 314.322 + _Time.y) > 0.9);
     }
 
     ENDCG

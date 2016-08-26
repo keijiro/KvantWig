@@ -115,18 +115,32 @@ namespace Kvant
                 {
                     var v = (float)i2 / (length - 1);
 
-                    for (var i3 = 0; i3 < 4; i3++)
+                    for (var i3 = 0; i3 < 8; i3++)
                         uvs.Add(new Vector2(u, v));
 
                     vertices.Add(new Vector3(-1, -1, 0));
                     vertices.Add(new Vector3(+1, -1, 0));
+
+                    vertices.Add(new Vector3(+1, -1, 0));
+                    vertices.Add(new Vector3(+1, +1, 0));
+
                     vertices.Add(new Vector3(+1, +1, 0));
                     vertices.Add(new Vector3(-1, +1, 0));
 
-                    normals.Add(new Vector3(-1, -1, 0).normalized);
-                    normals.Add(new Vector3(+1, -1, 0).normalized);
-                    normals.Add(new Vector3(+1, +1, 0).normalized);
-                    normals.Add(new Vector3(-1, +1, 0).normalized);
+                    vertices.Add(new Vector3(-1, +1, 0));
+                    vertices.Add(new Vector3(-1, -1, 0));
+
+                    normals.Add(new Vector3(0, -1, 0).normalized);
+                    normals.Add(new Vector3(0, -1, 0).normalized);
+
+                    normals.Add(new Vector3(1, 0, 0).normalized);
+                    normals.Add(new Vector3(1, 0, 0).normalized);
+
+                    normals.Add(new Vector3(0, 1, 0).normalized);
+                    normals.Add(new Vector3(0, 1, 0).normalized);
+
+                    normals.Add(new Vector3(-1, 0, 0).normalized);
+                    normals.Add(new Vector3(-1, 0, 0).normalized);
                 }
             }
 
@@ -136,18 +150,18 @@ namespace Kvant
             {
                 for (var i2 = 0; i2 < length - 1; i2++)
                 {
-                    for (var i3 = 0; i3 < 4; i3++)
+                    for (var i3 = 0; i3 < 8; i3 += 2)
                     {
                         indices.Add(refi + i3);
-                        indices.Add(refi + ((i3 + 1) % 4));
-                        indices.Add(refi + i3 + 4);
+                        indices.Add(refi + i3 + 1);
+                        indices.Add(refi + i3 + 8);
 
-                        indices.Add(refi + ((i3 + 1) % 4));
-                        indices.Add(refi + 4 + ((i3 + 1) % 4));
-                        indices.Add(refi + i3 + 4);
+                        indices.Add(refi + i3 + 1);
+                        indices.Add(refi + i3 + 9);
+                        indices.Add(refi + i3 + 8);
                     }
 
-                    refi += 4;
+                    refi += 8;
                 }
             }
 

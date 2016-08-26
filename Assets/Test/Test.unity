@@ -283,7 +283,7 @@ MonoBehaviour:
   _template: {fileID: 11400000, guid: 366b816b4cebb9f45aca51d4e725cfc2, type: 2}
   _castShadows: 1
   _receiveShadows: 1
-  _segmentLength: 0.1
+  _segmentLength: 0.08
   _stepDivide: 4
   _randomSeed: 0
   _kernelShader: {fileID: 4800000, guid: c91a1514fa253694b9c31e72a147c2e6, type: 3}

@@ -78,8 +78,8 @@ Shader "Hidden/Kvant/Wig/Kernel"
             float3 diff = p - p0;
             float len = length(diff);
 
-            if (len > _SegmentLength)
-                p = p0 + diff / len * _SegmentLength;
+            if (len > _SegmentLength * lerp(0.5, 1, frac(i.uv.x * 123.4)));
+                p = p0 + diff / len * _SegmentLength * lerp(0.5, 1, frac(i.uv.x * 123.4));
 
             return float4(p, 1);
         }
@@ -93,10 +93,10 @@ Shader "Hidden/Kvant/Wig/Kernel"
         float3 p1 = SamplePosition(i.uv, -1);
         float3 p2 = SamplePosition(i.uv, 0);
 
-        float3 pt = p1 + normalize(p1 - p0) * _SegmentLength;
+        float3 pt = p1 + normalize(p1 - p0) * _SegmentLength * lerp(0.5, 1, frac(i.uv.x * 123.4));
 
         if (i.uv.y < _PositionTex_TexelSize.y * 2)
-            pt = p1 + SampleFoundationNormal(i.uv) * _SegmentLength;
+            pt = p1 + SampleFoundationNormal(i.uv) * _SegmentLength * lerp(0.5, 1, frac(i.uv.x * 123.4));
 
         v *= exp(-30 * _DeltaTime);
         //v = normalize(v) * min(length(v), 400);
