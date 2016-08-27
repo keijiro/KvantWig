@@ -180,8 +180,11 @@ namespace Kvant
 
         void OnDestroy()
         {
-            if (_material != null)
-                DestroyImmediate(_material);
+            if (_material != null) DestroyImmediate(_material);
+            if (_positionBuffer1 != null) DestroyImmediate(_positionBuffer1);
+            if (_positionBuffer2 != null) DestroyImmediate(_positionBuffer2);
+            if (_velocityBuffer1 != null) DestroyImmediate(_velocityBuffer1);
+            if (_velocityBuffer2 != null) DestroyImmediate(_velocityBuffer2);
         }
 
         void LateUpdate()
@@ -209,8 +212,8 @@ namespace Kvant
             if (_propertyBlock == null)
                 _propertyBlock = new MaterialPropertyBlock();
 
-            _propertyBlock.SetTexture("_PositionTex", _positionBuffer2);
-            _propertyBlock.SetTexture("_FoundationTex", _template.foundation);
+            _propertyBlock.SetTexture("_PositionBuffer", _positionBuffer2);
+            _propertyBlock.SetFloat("_RandomSeed", _randomSeed);
 
             GetComponent<MeshRenderer>().SetPropertyBlock(_propertyBlock);
         }

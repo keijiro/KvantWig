@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Wig
+  m_Name: Filament
   m_Shader: {fileID: 4800000, guid: 5976ea646a28dd34ca270c7f10efbbed, type: 3}
   m_ShaderKeywords: _EMISSION
   m_LightmapFlags: 1
@@ -70,6 +70,12 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
+        name: _PositionBuffer
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
         name: _PositionTex
       second:
         m_Texture: {fileID: 0}
@@ -77,7 +83,19 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - first:
+        name: _BaseBrightness
+      second: 1
+    - first:
+        name: _BaseHue
+      second: 0.514
+    - first:
+        name: _BaseRandom
+      second: 0.167
+    - first:
         name: _BumpScale
+      second: 1
+    - first:
+        name: _ColorAdd
       second: 1
     - first:
         name: _Cutoff
@@ -98,8 +116,23 @@ Material:
         name: _GlossyReflections
       second: 1
     - first:
-        name: _Metallic
+        name: _GlowColorAdd
       second: 0
+    - first:
+        name: _GlowIntensity
+      second: 2
+    - first:
+        name: _GlowProb
+      second: 0.144
+    - first:
+        name: _GlowRandom
+      second: 1
+    - first:
+        name: _HueAdd
+      second: 1
+    - first:
+        name: _Metallic
+      second: 0.154
     - first:
         name: _Mode
       second: 0
@@ -109,6 +142,9 @@ Material:
     - first:
         name: _Parallax
       second: 0.02
+    - first:
+        name: _Smoothness
+      second: 0.811
     - first:
         name: _SmoothnessTextureChannel
       second: 0
@@ -126,8 +162,14 @@ Material:
       second: 1
     m_Colors:
     - first:
+        name: _BaseColor
+      second: {r: 0.27205884, g: 0.06801471, b: 0.06801471, a: 1}
+    - first:
         name: _Color
-      second: {r: 1, g: 1, b: 1, a: 1}
+      second: {r: 0.5147059, g: 0.056769025, b: 0.056769025, a: 1}
     - first:
         name: _EmissionColor
       second: {r: 0, g: 0, b: 0, a: 1}
+    - first:
+        name: _GlowColor
+      second: {r: 1, g: 1, b: 1, a: 1}

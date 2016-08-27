@@ -161,9 +161,9 @@ namespace Kvant
                         indices.Add(refi + i3 + 9);
                         indices.Add(refi + i3 + 8);
                     }
-
                     refi += 8;
                 }
+                refi += 8;
             }
 
             // Reset the mesh asset.
