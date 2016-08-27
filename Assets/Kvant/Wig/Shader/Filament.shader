@@ -1,4 +1,4 @@
-Shader "Hidden/Kvant/Wig/Hair"
+Shader "Kvant/Wig/Filament"
 {
     Properties
     {

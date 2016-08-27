@@ -1,4 +1,4 @@
-Shader "Hidden/Kvant/Wig/Kernel"
+Shader "Hidden/Kvant/Wig/Kernels"
 {
     Properties
     {

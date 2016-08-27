@@ -105,15 +105,14 @@ namespace Kvant
             var vertices = new List<Vector3>();
             var normals = new List<Vector3>();
             var uvs = new List<Vector2>();
-            var indices = new List<int>();
 
             for (var i1 = 0; i1 < vcount; i1++)
             {
-                var u = (float)i1 / vcount;
+                var u = (i1 + 0.5f) / vcount;
 
                 for (var i2 = 0; i2 < length; i2++)
                 {
-                    var v = (float)i2 / (length - 1);
+                    var v = (i2 + 0.5f) / length;
 
                     for (var i3 = 0; i3 < 8; i3++)
                         uvs.Add(new Vector2(u, v));
@@ -130,20 +129,22 @@ namespace Kvant
                     vertices.Add(new Vector3(-1, +1, 0));
                     vertices.Add(new Vector3(-1, -1, 0));
 
-                    normals.Add(new Vector3(0, -1, 0).normalized);
-                    normals.Add(new Vector3(0, -1, 0).normalized);
+                    normals.Add(new Vector3(0, -1, 0));
+                    normals.Add(new Vector3(0, -1, 0));
 
-                    normals.Add(new Vector3(1, 0, 0).normalized);
-                    normals.Add(new Vector3(1, 0, 0).normalized);
+                    normals.Add(new Vector3(1, 0, 0));
+                    normals.Add(new Vector3(1, 0, 0));
 
-                    normals.Add(new Vector3(0, 1, 0).normalized);
-                    normals.Add(new Vector3(0, 1, 0).normalized);
+                    normals.Add(new Vector3(0, 1, 0));
+                    normals.Add(new Vector3(0, 1, 0));
 
-                    normals.Add(new Vector3(-1, 0, 0).normalized);
-                    normals.Add(new Vector3(-1, 0, 0).normalized);
+                    normals.Add(new Vector3(-1, 0, 0));
+                    normals.Add(new Vector3(-1, 0, 0));
                 }
             }
 
+            // Construct a index array of the mesh.
+            var indices = new List<int>();
             var refi = 0;
 
             for (var i1 = 0; i1 < vcount; i1++)
