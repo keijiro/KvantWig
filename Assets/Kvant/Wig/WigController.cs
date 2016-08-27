@@ -186,6 +186,9 @@ namespace Kvant
 
         void LateUpdate()
         {
+            // Do nothing if something is missing.
+            if (_template == null || _target == null) return;
+
             // Reset/Initialization
             if (_needsReset)
             {
