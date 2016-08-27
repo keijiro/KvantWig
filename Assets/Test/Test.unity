@@ -108,6 +108,7 @@ GameObject:
   - 114: {fileID: 118794612}
   - 114: {fileID: 118794615}
   - 114: {fileID: 118794614}
+  - 114: {fileID: 118794613}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -243,6 +244,26 @@ MonoBehaviour:
   _foregroundBlur: 1
   _visualize: 0
   _shader: {fileID: 4800000, guid: b99c58356816f7b46818fe7e788b2fa1, type: 3}
+--- !u!114 &118794613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 118794604}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a1e83ab3c6c9d7468fff9be485a1390, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _source: 1
+  _blendRatio: 1
+  _preferDepthNormals: 0
+  _depthRepeat: 1
+  _validateNormals: 1
+  _motionOverlayAmplitude: 10
+  _motionVectorsAmplitude: 50
+  _motionVectorsResolution: 16
+  _shader: {fileID: 4800000, guid: f104e85b3463c2748a02d2f07582fa63, type: 3}
 --- !u!114 &118794614
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -506,8 +527,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _target: {fileID: 1368714482}
   _template: {fileID: 11400000, guid: 366b816b4cebb9f45aca51d4e725cfc2, type: 2}
-  _length: 2
-  _stepDivide: 3
+  _length: 0.87
+  _stepDivide: 4
   _randomSeed: 0
   _kernels: {fileID: 4800000, guid: c91a1514fa253694b9c31e72a147c2e6, type: 3}
 --- !u!23 &1261623235
