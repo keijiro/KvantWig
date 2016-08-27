@@ -217,8 +217,8 @@ MonoBehaviour:
   _sampleCount: 3
   _sampleCountValue: 24
   _downsampling: 0
-  _occlusionSource: 0
-  _ambientOnly: 0
+  _occlusionSource: 2
+  _ambientOnly: 1
   _aoShader: {fileID: 4800000, guid: 7541b5f18b1224a81927d8b1184b122b, type: 3}
   _quadMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &118794612

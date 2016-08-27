@@ -12,6 +12,7 @@ Shader "Hidden/Kvant/Wig/Hair"
 
     struct Input {
         half color;
+        half scroll;
     };
 
 float3 HueToRgb(float h)
@@ -42,14 +43,16 @@ float3 HueToRgb(float h)
         v.normal = normalize(vn);
 
         data.color = uv.x;
+        data.scroll = -uv.y + _Time.y * 5;
     }
 
     void surf(Input IN, inout SurfaceOutputStandard o)
     {
-        o.Albedo = HueToRgb(frac(IN.color * 3142.213)) * 0.1;
-        o.Smoothness = 0.8;
+        float3 color = HueToRgb(frac(IN.color * 3142.213));
+        o.Albedo = lerp(color, 1, 0.1) * 0.4;
+        o.Smoothness = 0.7;
         o.Metallic = 0;
-        o.Emission = o.Albedo * 20 * (frac(IN.color * 314.322 + _Time.y) > 0.9);
+        o.Emission = color * 2 * frac(IN.scroll) * (frac(IN.color * 314.322 + _Time.y / 2) > 0.8);
     }
 
     ENDCG
