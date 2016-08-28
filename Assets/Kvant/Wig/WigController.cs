@@ -28,8 +28,8 @@ namespace Kvant
         [SerializeField]
         Vector3 _gravity = new Vector3(0, -8, 2);
 
-        [SerializeField, Range(1, 10)]
-        int _stepDivide = 3;
+        [SerializeField]
+        float _maxTimeStep = 0.006f;
 
         [SerializeField]
         float _randomSeed;
@@ -170,10 +170,14 @@ namespace Kvant
         }
 
         // Do simulation.
-        void Simulate(float deltaTime, int steps)
+        void Simulate(float deltaTime)
         {
             var newTargetPosition = _target.position;
             var newTargetRotation = _target.rotation;
+
+            var steps = Mathf.CeilToInt(deltaTime / _maxTimeStep);
+            steps = Mathf.Clamp(steps, 1, 100);
+
             var dt = deltaTime / steps;
 
             for (var i = 0; i < steps; i++)
@@ -230,15 +234,14 @@ namespace Kvant
                 SetUpResources();
                 ResetSimulationState();
 
-                if (!Application.isPlaying)
-                    Simulate(0.3f, _stepDivide * 20);
+                // Do warmup in edit mode.
+                if (!Application.isPlaying) Simulate(0.4f);
 
                 _needsReset = false;
             }
 
-            // Advance simulation frame
-            if (Application.isPlaying)
-                Simulate(Time.deltaTime, _stepDivide);
+            // Advance simulation time.
+            if (Application.isPlaying) Simulate(Time.deltaTime);
 
             // Update the material property block of the mesh renderer.
             if (_propertyBlock == null)

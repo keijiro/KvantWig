@@ -528,7 +528,10 @@ MonoBehaviour:
   _target: {fileID: 1368714482}
   _template: {fileID: 11400000, guid: ccecb93095239df4dba3edea650dfbe2, type: 2}
   _length: 2
-  _stepDivide: 4
+  _spring: 600
+  _damping: 30
+  _gravity: {x: 0, y: -8, z: 2}
+  _maxTimeStep: 0.0056
   _randomSeed: 0
   _kernels: {fileID: 4800000, guid: c91a1514fa253694b9c31e72a147c2e6, type: 3}
 --- !u!23 &1261623235

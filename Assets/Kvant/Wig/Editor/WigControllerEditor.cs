@@ -9,7 +9,7 @@ namespace Kvant
         #region Editor functions
 
         SerializedProperty _template;
-        SerializedProperty _stepDivide;
+        SerializedProperty _maxTimeStep;
         SerializedProperty _randomSeed;
 
         SerializedProperty _target;
@@ -22,7 +22,7 @@ namespace Kvant
         void OnEnable()
         {
             _template = serializedObject.FindProperty("_template");
-            _stepDivide = serializedObject.FindProperty("_stepDivide");
+            _maxTimeStep = serializedObject.FindProperty("_maxTimeStep");
             _randomSeed = serializedObject.FindProperty("_randomSeed");
 
             _target = serializedObject.FindProperty("_target");
@@ -42,7 +42,7 @@ namespace Kvant
 
             // Build time options
             EditorGUILayout.PropertyField(_template);
-            EditorGUILayout.PropertyField(_stepDivide);
+            EditorGUILayout.PropertyField(_maxTimeStep);
             EditorGUILayout.PropertyField(_randomSeed);
 
             // Play mode: check changes at this point.
