@@ -16,6 +16,12 @@ Material:
     serializedVersion: 2
     m_TexEnvs:
     - first:
+        name: _BasisBuffer
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
         name: _BumpMap
       second:
         m_Texture: {fileID: 0}
@@ -149,6 +155,9 @@ Material:
         name: _Parallax
       second: 0.02
     - first:
+        name: _RandomThick
+      second: 0.374
+    - first:
         name: _Smoothness
       second: 0.716
     - first:
@@ -161,8 +170,11 @@ Material:
         name: _SrcBlend
       second: 1
     - first:
+        name: _ThickRandom
+      second: 0.451
+    - first:
         name: _Thickness
-      second: 0.01
+      second: 0.0129
     - first:
         name: _UVSec
       second: 0

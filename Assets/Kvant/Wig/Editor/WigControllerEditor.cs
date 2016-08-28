@@ -14,10 +14,13 @@ namespace Kvant
 
         SerializedProperty _target;
         SerializedProperty _length;
+        SerializedProperty _lengthRandomness;
 
         SerializedProperty _spring;
         SerializedProperty _damping;
         SerializedProperty _gravity;
+
+        static GUIContent _textRandomness = new GUIContent("Randomness");
 
         void OnEnable()
         {
@@ -27,6 +30,7 @@ namespace Kvant
 
             _target = serializedObject.FindProperty("_target");
             _length = serializedObject.FindProperty("_length");
+            _lengthRandomness = serializedObject.FindProperty("_lengthRandomness");
 
             _spring = serializedObject.FindProperty("_spring");
             _damping = serializedObject.FindProperty("_damping");
@@ -53,7 +57,11 @@ namespace Kvant
 
             // Runtime options
             EditorGUILayout.PropertyField(_target);
+
+            EditorGUILayout.Space();
+
             EditorGUILayout.PropertyField(_length);
+            EditorGUILayout.PropertyField(_lengthRandomness, _textRandomness);
 
             EditorGUILayout.Space();
 

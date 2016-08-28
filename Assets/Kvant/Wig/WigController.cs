@@ -19,6 +19,9 @@ namespace Kvant
         [SerializeField, Range(0.01f, 5)]
         float _length = 1;
 
+        [SerializeField, Range(0, 1)]
+        float _lengthRandomness = 0.5f;
+
         [SerializeField]
         float _spring = 600;
 
@@ -132,7 +135,9 @@ namespace Kvant
         void UpdateSimulationParameters(Vector3 pos, Quaternion rot, float dt)
         {
             _material.SetMatrix("_FoundationTransform", Matrix4x4.TRS(pos, rot, Vector3.one));
-            _material.SetFloat("_SegmentLength", _length / _template.segmentCount);
+            _material.SetVector("_SegmentLength", new Vector2(
+                _length / _template.segmentCount, _lengthRandomness
+            ));
             _material.SetFloat("_Spring", _spring);
             _material.SetFloat("_Damping", _damping);
             _material.SetVector("_Gravity", _gravity);

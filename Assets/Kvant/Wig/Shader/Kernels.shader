@@ -13,15 +13,16 @@ Shader "Hidden/Kvant/Wig/Kernels"
     #include "Common.cginc"
 
     float _RandomSeed;
-    float _SegmentLength;
+    float2 _SegmentLength; // (length, randomness)
     float _Spring;
     float _Damping;
     float3 _Gravity;
     float _DeltaTime;
 
-    float FilamentScale(float2 uv)
+    float SegmentLength(float2 uv)
     {
-        return lerp(0.5, 1, frac(uv.x * 123.4));
+        float r = frac((uv.x + _RandomSeed) * 632.8133);
+        return _SegmentLength.x * (1 - r * _SegmentLength.y);
     }
 
     float4 frag_InitPosition(v2f_img i) : SV_Target
@@ -32,7 +33,7 @@ Shader "Hidden/Kvant/Wig/Kernels"
         float dv = _PositionBuffer_TexelSize.y;
         float v = i.uv.y - dv * 0.5;
 
-        float l = _SegmentLength / dv * FilamentScale(i.uv);
+        float l = SegmentLength(i.uv) / dv;
 
         return float4(origin + normal * (l * v), 1);
     }
@@ -45,7 +46,8 @@ Shader "Hidden/Kvant/Wig/Kernels"
     float4 frag_InitBasis(v2f_img i) : SV_Target
     {
         // Make a random basis around the foundation normal vector.
-        float3 ax = float3(1, frac(i.uv.x * 131.492) * 2 - 1, 0);
+        float r = frac((i.uv.x + _RandomSeed) * 1314.92);
+        float3 ax = float3(1, r * 2 - 1, 0);
         float3 az = SampleFoundationNormal(i.uv);
         float3 ay = normalize(cross(az, ax));
         ax = normalize(cross(ay, az));
@@ -67,8 +69,7 @@ Shader "Hidden/Kvant/Wig/Kernels"
 
             // Segment length constraint
             float3 pp = SamplePosition(i.uv, -1);
-            float l = _SegmentLength * FilamentScale(i.uv);
-            p = pp + normalize(p - pp) * l;
+            p = pp + normalize(p - pp) * SegmentLength(i.uv);
 
             return float4(p, 1);
         }
@@ -83,10 +84,9 @@ Shader "Hidden/Kvant/Wig/Kernels"
         v *= exp(-_Damping * _DeltaTime);
 
         // Target position
-        float l = _SegmentLength * FilamentScale(i.uv);
         float3 pp2 = SamplePosition(i.uv, -4);
         float3 pp1 = SamplePosition(i.uv, -1);
-        float3 pt = pp1 + normalize(pp1 - pp2) * l;
+        float3 pt = pp1 + normalize(pp1 - pp2) * SegmentLength(i.uv);
 
         // Acceleration (spring model)
         v += (pt - p) * _DeltaTime * _Spring;

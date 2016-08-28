@@ -9,7 +9,8 @@ Shader "Kvant/Wig/Filament"
         _Smoothness("Smoothness", Range(0, 1)) = 0
 
         [Space]
-        _Thickness("Thickness", Float) = 0.02
+        _Thickness("Thickness", Range(0, 0.1)) = 0.02
+        _ThickRandom("Randomize", Range(0, 1)) = 0.5
 
         [Header(Base)]
 
@@ -32,6 +33,7 @@ Shader "Kvant/Wig/Filament"
     half _Smoothness;
 
     half _Thickness;
+    half _ThickRandom;
 
     half3 _BaseColor;
     half _BaseRandom;
@@ -61,6 +63,7 @@ Shader "Kvant/Wig/Filament"
 
         // Filament radius
         float radius = _Thickness * (1 - uv.y * uv.y);
+        radius *= 1 - _ThickRandom * frac((uv.x + _RandomSeed) * 893.8912);
 
         // Modify the vertex
         v.vertex.xyz = p.xyz + mul(v.vertex, basis) * radius;
