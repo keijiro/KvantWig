@@ -13,13 +13,16 @@ Shader "Hidden/Kvant/Wig/Kernels"
     #include "Common.cginc"
     #include "SimplexNoiseGrad3D.cginc"
 
+    float _DeltaTime;
     float _RandomSeed;
+
     float2 _SegmentLength; // (length, randomness)
+
     float _Spring;
     float _Damping;
     float3 _Gravity;
+
     float3 _NoiseParams; // (amplitude, frequency, speed)
-    float _DeltaTime;
 
     float SegmentLength(float2 uv)
     {

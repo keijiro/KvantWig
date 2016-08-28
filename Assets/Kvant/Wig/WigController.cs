@@ -10,41 +10,96 @@ namespace Kvant
     {
         #region Editable properties
 
+        // Foundation settings
+
         [SerializeField]
         Transform _target;
+
+        public Transform target {
+            get { return _target; }
+            set { _target = value; }
+        }
 
         [SerializeField]
         WigTemplate _template;
 
-        [SerializeField, Range(0.01f, 5)]
-        float _length = 1;
-
-        [SerializeField, Range(0, 1)]
-        float _lengthRandomness = 0.5f;
-
-        [SerializeField]
-        float _spring = 600;
-
-        [SerializeField]
-        float _damping = 30;
-
-        [SerializeField]
-        Vector3 _gravity = new Vector3(0, -8, 2);
-
-        [SerializeField]
-        float _noiseAmplitude = 5;
-
-        [SerializeField]
-        float _noiseFrequency = 1;
-
-        [SerializeField]
-        float _noiseSpeed = 0.1f;
+        // Constants
 
         [SerializeField]
         float _maxTimeStep = 0.006f;
 
         [SerializeField]
         float _randomSeed;
+
+        // Filament length
+
+        [SerializeField, Range(0.01f, 5)]
+        float _length = 1;
+
+        public float length {
+            get { return _length; }
+            set { _length = value; }
+        }
+
+        [SerializeField, Range(0, 1)]
+        float _lengthRandomness = 0.5f;
+
+        public float lengthRandomness {
+            get { return _lengthRandomness; }
+            set { _lengthRandomness = value; }
+        }
+
+        // Dynamics
+
+        [SerializeField]
+        float _spring = 600;
+
+        public float spring {
+            get { return _spring; }
+            set { _spring = value; }
+        }
+
+        [SerializeField]
+        float _damping = 30;
+
+        public float damping {
+            get { return _damping; }
+            set { _damping = value; }
+        }
+
+        [SerializeField]
+        Vector3 _gravity = new Vector3(0, -8, 2);
+
+        public Vector3 gravity {
+            get { return _gravity; }
+            set { _gravity = value; }
+        }
+
+        // Noise field
+
+        [SerializeField]
+        float _noiseAmplitude = 5;
+
+        public float noiseAmplitude {
+            get { return _noiseAmplitude; }
+            set { _noiseAmplitude = value; }
+        }
+
+        [SerializeField]
+        float _noiseFrequency = 1;
+
+        public float noiseFrequency {
+            get { return _noiseFrequency; }
+            set { _noiseFrequency = value; }
+        }
+
+        [SerializeField]
+        float _noiseSpeed = 0.1f;
+
+        public float noiseSpeed {
+            get { return _noiseSpeed; }
+            set { _noiseSpeed = value; }
+        }
 
         #endregion
 
@@ -144,16 +199,20 @@ namespace Kvant
         void UpdateSimulationParameters(Vector3 pos, Quaternion rot, float dt)
         {
             _material.SetMatrix("_FoundationTransform", Matrix4x4.TRS(pos, rot, Vector3.one));
+
+            _material.SetFloat("_DeltaTime", dt);
+
             _material.SetVector("_SegmentLength", new Vector2(
                 _length / _template.segmentCount, _lengthRandomness
             ));
+
             _material.SetFloat("_Spring", _spring);
             _material.SetFloat("_Damping", _damping);
             _material.SetVector("_Gravity", _gravity);
+
             _material.SetVector("_NoiseParams", new Vector3(
                 _noiseAmplitude, _noiseFrequency, _noiseSpeed
             ));
-            _material.SetFloat("_DeltaTime", dt);
         }
 
         // Invoke the simulation kernels.
