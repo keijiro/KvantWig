@@ -12,9 +12,12 @@ Shader "Hidden/Kvant/Wig/Kernels"
 
     #include "Common.cginc"
 
-    float _DeltaTime;
     float _RandomSeed;
     float _SegmentLength;
+    float _Spring;
+    float _Damping;
+    float3 _Gravity;
+    float _DeltaTime;
 
     float FilamentScale(float2 uv)
     {
@@ -59,41 +62,37 @@ Shader "Hidden/Kvant/Wig/Kernels"
         else
         {
             // Newtonian motion
-            float3 pc = SamplePosition(i.uv, 0);
-            pc += SampleVelocity(i.uv) * _DeltaTime;
+            float3 p = SamplePosition(i.uv, 0);
+            p += SampleVelocity(i.uv) * _DeltaTime;
 
             // Segment length constraint
-            float3 p0 = SamplePosition(i.uv, -1);
-            float3 p0pc = pc - p0;
-            float len = length(p0pc);
+            float3 pp = SamplePosition(i.uv, -1);
+            float l = _SegmentLength * FilamentScale(i.uv);
+            p = pp + normalize(p - pp) * l;
 
-            float slen = _SegmentLength * FilamentScale(i.uv);
-
-            if (len > slen) pc = p0 + p0pc / len * slen;
-
-            return float4(pc, 1);
+            return float4(p, 1);
         }
     }
 
     float4 frag_UpdateVelocity(v2f_img i) : SV_Target
     {
+        float3 p = SamplePosition(i.uv, 0);
         float3 v = SampleVelocity(i.uv);
-        float3 p0 = SamplePosition(i.uv, -3);
-        float3 p1 = SamplePosition(i.uv, -1);
-        float3 p2 = SamplePosition(i.uv, 0);
 
-        // Velocity damping
-        v *= exp(-30 * _DeltaTime);
+        // Damping
+        v *= exp(-_Damping * _DeltaTime);
 
         // Target position
-        float slen = _SegmentLength * FilamentScale(i.uv);
-        float3 pt = p1 + normalize(p1 - p0) * slen;
+        float l = _SegmentLength * FilamentScale(i.uv);
+        float3 pp2 = SamplePosition(i.uv, -4);
+        float3 pp1 = SamplePosition(i.uv, -1);
+        float3 pt = pp1 + normalize(pp1 - pp2) * l;
 
         // Acceleration (spring model)
-        v += (pt - p2) * _DeltaTime * 600;
+        v += (pt - p) * _DeltaTime * _Spring;
 
         // Gravity
-        v += float3(0, -8, 2) * _DeltaTime;
+        v += _Gravity * _DeltaTime;
 
         return float4(v, 0);
     }

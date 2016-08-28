@@ -19,6 +19,15 @@ namespace Kvant
         [SerializeField, Range(0.01f, 5)]
         float _length = 1;
 
+        [SerializeField]
+        float _spring = 600;
+
+        [SerializeField]
+        float _damping = 30;
+
+        [SerializeField]
+        Vector3 _gravity = new Vector3(0, -8, 2);
+
         [SerializeField, Range(1, 10)]
         int _stepDivide = 3;
 
@@ -124,6 +133,9 @@ namespace Kvant
         {
             _material.SetMatrix("_FoundationTransform", Matrix4x4.TRS(pos, rot, Vector3.one));
             _material.SetFloat("_SegmentLength", _length / _template.segmentCount);
+            _material.SetFloat("_Spring", _spring);
+            _material.SetFloat("_Damping", _damping);
+            _material.SetVector("_Gravity", _gravity);
             _material.SetFloat("_DeltaTime", dt);
         }
 

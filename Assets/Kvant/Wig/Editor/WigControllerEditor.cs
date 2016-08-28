@@ -15,6 +15,10 @@ namespace Kvant
         SerializedProperty _target;
         SerializedProperty _length;
 
+        SerializedProperty _spring;
+        SerializedProperty _damping;
+        SerializedProperty _gravity;
+
         void OnEnable()
         {
             _template = serializedObject.FindProperty("_template");
@@ -23,6 +27,10 @@ namespace Kvant
 
             _target = serializedObject.FindProperty("_target");
             _length = serializedObject.FindProperty("_length");
+
+            _spring = serializedObject.FindProperty("_spring");
+            _damping = serializedObject.FindProperty("_damping");
+            _gravity = serializedObject.FindProperty("_gravity");
         }
 
         public override void OnInspectorGUI()
@@ -46,6 +54,12 @@ namespace Kvant
             // Runtime options
             EditorGUILayout.PropertyField(_target);
             EditorGUILayout.PropertyField(_length);
+
+            EditorGUILayout.Space();
+
+            EditorGUILayout.PropertyField(_spring);
+            EditorGUILayout.PropertyField(_damping);
+            EditorGUILayout.PropertyField(_gravity);
 
             // Edit mode: check changes at this point.
             if (!Application.isPlaying)
