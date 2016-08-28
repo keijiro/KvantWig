@@ -250,7 +250,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 118794604}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3a1e83ab3c6c9d7468fff9be485a1390, type: 3}
   m_Name: 
@@ -259,7 +259,7 @@ MonoBehaviour:
   _blendRatio: 1
   _preferDepthNormals: 0
   _depthRepeat: 1
-  _validateNormals: 1
+  _validateNormals: 0
   _motionOverlayAmplitude: 10
   _motionVectorsAmplitude: 50
   _motionVectorsResolution: 16
@@ -513,7 +513,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1261623232}
-  m_Mesh: {fileID: 43000011153433426, guid: 366b816b4cebb9f45aca51d4e725cfc2, type: 2}
+  m_Mesh: {fileID: 43000012568918234, guid: ccecb93095239df4dba3edea650dfbe2, type: 2}
 --- !u!114 &1261623234
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -526,8 +526,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _target: {fileID: 1368714482}
-  _template: {fileID: 11400000, guid: 366b816b4cebb9f45aca51d4e725cfc2, type: 2}
-  _length: 0.87
+  _template: {fileID: 11400000, guid: ccecb93095239df4dba3edea650dfbe2, type: 2}
+  _length: 2
   _stepDivide: 4
   _randomSeed: 0
   _kernels: {fileID: 4800000, guid: c91a1514fa253694b9c31e72a147c2e6, type: 3}

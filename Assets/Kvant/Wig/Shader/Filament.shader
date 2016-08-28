@@ -2,8 +2,8 @@ Shader "Kvant/Wig/Filament"
 {
     Properties
     {
-        [HideInInspector]
-        _PositionBuffer("", 2D) = ""{}
+        [HideInInspector] _PositionBuffer("", 2D) = ""{}
+        [HideInInspector] _BasisBuffer("", 2D) = ""{}
 
         [Gamma] _Metallic("Metallic", Range(0, 1)) = 0
         _Smoothness("Smoothness", Range(0, 1)) = 0
@@ -26,8 +26,7 @@ Shader "Kvant/Wig/Filament"
 
     CGINCLUDE
 
-    sampler2D _PositionBuffer;
-    float4 _PositionBuffer_TexelSize;
+    #include "Common.cginc"
 
     half _Metallic;
     half _Smoothness;
@@ -48,44 +47,27 @@ Shader "Kvant/Wig/Filament"
         half filamentID;
     };
 
-    half3 HueToRGB(half h)
-    {
-        half r = abs(h * 6 - 3) - 1;
-        half g = 2 - abs(h * 6 - 2);
-        half b = 2 - abs(h * 6 - 4);
-        half3 rgb = saturate(half3(r, g, b));
-#if UNITY_COLORSPACE_GAMMA
-        return rgb;
-#else
-        return GammaToLinearSpace(rgb);
-#endif
-    }
-
     void vert(inout appdata_full v, out Input data)
     {
         UNITY_INITIALIZE_OUTPUT(Input, data);
 
-        float filament = v.texcoord.x;
-        float segment = v.texcoord.y;
-        float dseg = _PositionBuffer_TexelSize.y;
+        float2 uv = v.texcoord.xy;
 
-        float3 p0 = tex2Dlod(_PositionBuffer, float4(filament, segment - dseg, 0, 0)).xyz;
-        float3 p1 = tex2Dlod(_PositionBuffer, float4(filament, segment       , 0, 0)).xyz;
-        float3 p2 = tex2Dlod(_PositionBuffer, float4(filament, segment + dseg, 0, 0)).xyz;
+        // Point position
+        float3 p = SamplePosition(uv, 0);
 
-        float3 ax = normalize(float3(1, frac(filament * 31.492 + segment * 0.2) * 2 - 1, 0));
-        float3 az = normalize(p2 - p0);
-        float3 ay = normalize(cross(az, ax));
-        ax = normalize(cross(ay, az));
+        // Orthonormal basis vectors
+        float3x3 basis = DecodeBasis(SampleBasis(uv, 0));
 
-        float3x3 axes = float3x3(ax, ay, az);
+        // Filament radius
+        float radius = _Thickness * (1 - uv.y * uv.y);
 
-        float radius = _Thickness * (1 - segment);
+        // Modify the vertex
+        v.vertex.xyz = p.xyz + mul(v.vertex, basis) * radius;
+        v.normal = mul(v.normal, basis);
 
-        v.vertex.xyz = p1.xyz + mul(v.vertex, axes) * radius;
-        v.normal = mul(v.normal, axes);
-
-        data.filamentID = filament + _RandomSeed * 58.92128;
+        // Parameters for the pixel shader
+        data.filamentID = uv.x + _RandomSeed * 58.92128;
     }
 
     void surf(Input IN, inout SurfaceOutputStandard o)

@@ -38,6 +38,8 @@ namespace Kvant
         RenderTexture _positionBuffer2;
         RenderTexture _velocityBuffer1;
         RenderTexture _velocityBuffer2;
+        RenderTexture _basisBuffer1;
+        RenderTexture _basisBuffer2;
 
         // Temporary objects for controlling other components
         MeshFilter _meshFilter;
@@ -73,17 +75,22 @@ namespace Kvant
                 _material.hideFlags = HideFlags.DontSave;
             }
 
+            _material.SetTexture("_FoundationData", _template.foundation);
             _material.SetFloat("_RandomSeed", _randomSeed);
 
             if (_positionBuffer1 != null) DestroyImmediate(_positionBuffer1);
             if (_positionBuffer2 != null) DestroyImmediate(_positionBuffer2);
             if (_velocityBuffer1 != null) DestroyImmediate(_velocityBuffer1);
             if (_velocityBuffer2 != null) DestroyImmediate(_velocityBuffer2);
+            if (_basisBuffer1 != null) DestroyImmediate(_basisBuffer1);
+            if (_basisBuffer2 != null) DestroyImmediate(_basisBuffer2);
 
             _positionBuffer1 = CreateSimulationBuffer();
             _positionBuffer2 = CreateSimulationBuffer();
             _velocityBuffer1 = CreateSimulationBuffer();
             _velocityBuffer2 = CreateSimulationBuffer();
+            _basisBuffer1 = CreateSimulationBuffer();
+            _basisBuffer2 = CreateSimulationBuffer();
 
             _meshFilter = GetComponent<MeshFilter>();
 
@@ -104,15 +111,18 @@ namespace Kvant
 
             UpdateSimulationParameters(_targetPosition, _targetRotation, 0);
 
+            // This is needed to give the texel size for the shader.
+            _material.SetTexture("_PositionBuffer", _positionBuffer1);
+
             Graphics.Blit(null, _positionBuffer2, _material, 0);
             Graphics.Blit(null, _velocityBuffer2, _material, 1);
+            Graphics.Blit(null, _basisBuffer2, _material, 2);
         }
 
         // Update the parameters in the simulation kernels.
         void UpdateSimulationParameters(Vector3 pos, Quaternion rot, float dt)
         {
-            _material.SetTexture("_FoundationTex", _template.foundation);
-            _material.SetMatrix("_Transform", Matrix4x4.TRS(pos, rot, Vector3.one));
+            _material.SetMatrix("_FoundationTransform", Matrix4x4.TRS(pos, rot, Vector3.one));
             _material.SetFloat("_SegmentLength", _length / _template.segmentCount);
             _material.SetFloat("_DeltaTime", dt);
         }
@@ -123,20 +133,28 @@ namespace Kvant
             // Swap the buffers.
             var pb = _positionBuffer1;
             var vb = _velocityBuffer1;
+            var nb = _basisBuffer1;
             _positionBuffer1 = _positionBuffer2;
             _velocityBuffer1 = _velocityBuffer2;
+            _basisBuffer1 = _basisBuffer2;
             _positionBuffer2 = pb;
             _velocityBuffer2 = vb;
+            _basisBuffer2 = nb;
 
             // Update the velocity buffer.
             UpdateSimulationParameters(pos, rot, dt);
-            _material.SetTexture("_PositionTex", _positionBuffer1);
-            _material.SetTexture("_VelocityTex", _velocityBuffer1);
-            Graphics.Blit(null, _velocityBuffer2, _material, 3);
+            _material.SetTexture("_PositionBuffer", _positionBuffer1);
+            _material.SetTexture("_VelocityBuffer", _velocityBuffer1);
+            Graphics.Blit(null, _velocityBuffer2, _material, 4);
 
             // Update the position buffer.
-            _material.SetTexture("_VelocityTex", _velocityBuffer2);
-            Graphics.Blit(null, _positionBuffer2, _material, 2);
+            _material.SetTexture("_VelocityBuffer", _velocityBuffer2);
+            Graphics.Blit(null, _positionBuffer2, _material, 3);
+
+            // Update the basis buffer.
+            _material.SetTexture("_PositionBuffer", _positionBuffer2);
+            _material.SetTexture("_BasisBuffer", _basisBuffer1);
+            Graphics.Blit(null, _basisBuffer2, _material, 5);
         }
 
         // Do simulation.
@@ -185,6 +203,8 @@ namespace Kvant
             if (_positionBuffer2 != null) DestroyImmediate(_positionBuffer2);
             if (_velocityBuffer1 != null) DestroyImmediate(_velocityBuffer1);
             if (_velocityBuffer2 != null) DestroyImmediate(_velocityBuffer2);
+            if (_basisBuffer1 != null) DestroyImmediate(_basisBuffer1);
+            if (_basisBuffer2 != null) DestroyImmediate(_basisBuffer2);
         }
 
         void LateUpdate()
@@ -213,6 +233,7 @@ namespace Kvant
                 _propertyBlock = new MaterialPropertyBlock();
 
             _propertyBlock.SetTexture("_PositionBuffer", _positionBuffer2);
+            _propertyBlock.SetTexture("_BasisBuffer", _basisBuffer2);
             _propertyBlock.SetFloat("_RandomSeed", _randomSeed);
 
             GetComponent<MeshRenderer>().SetPropertyBlock(_propertyBlock);

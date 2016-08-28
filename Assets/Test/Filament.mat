@@ -58,6 +58,12 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
+        name: _NormalBuffer
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
         name: _OcclusionMap
       second:
         m_Texture: {fileID: 0}
@@ -90,7 +96,7 @@ Material:
       second: 0.514
     - first:
         name: _BaseRandom
-      second: 0.167
+      second: 0.299
     - first:
         name: _BumpScale
       second: 1
@@ -120,19 +126,19 @@ Material:
       second: 0
     - first:
         name: _GlowIntensity
-      second: 2
+      second: 2.2
     - first:
         name: _GlowProb
-      second: 0.144
+      second: 0.154
     - first:
         name: _GlowRandom
-      second: 1
+      second: 0
     - first:
         name: _HueAdd
       second: 1
     - first:
         name: _Metallic
-      second: 0.154
+      second: 0
     - first:
         name: _Mode
       second: 0
@@ -144,7 +150,7 @@ Material:
       second: 0.02
     - first:
         name: _Smoothness
-      second: 0.811
+      second: 0.716
     - first:
         name: _SmoothnessTextureChannel
       second: 0
@@ -154,6 +160,9 @@ Material:
     - first:
         name: _SrcBlend
       second: 1
+    - first:
+        name: _Thickness
+      second: 0.01
     - first:
         name: _UVSec
       second: 0
