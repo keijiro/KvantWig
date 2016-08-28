@@ -72,7 +72,7 @@ Material:
     - first:
         name: _Tex
       second:
-        m_Texture: {fileID: 8900000, guid: 53f19ae6c28231a46a166563d47492d4, type: 3}
+        m_Texture: {fileID: 8900000, guid: 21936655160f7bb46aca3b4b5032c65d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
@@ -90,7 +90,7 @@ Material:
       second: 0
     - first:
         name: _Exposure
-      second: 1
+      second: 1.3
     - first:
         name: _GlossMapScale
       second: 1

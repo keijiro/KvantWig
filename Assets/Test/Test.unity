@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.02596205, g: 0.025810258, b: 0.025117498, a: 1}
+  m_IndirectSpecularColor: {r: 0.5307847, g: 0.19140978, b: 0.056252927, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -108,7 +108,7 @@ GameObject:
   - 114: {fileID: 118794612}
   - 114: {fileID: 118794615}
   - 114: {fileID: 118794614}
-  - 114: {fileID: 118794613}
+  - 45: {fileID: 118794613}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -214,7 +214,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _intensity: 2
-  _radius: 0.2
+  _radius: 0.3
   _sampleCount: 3
   _sampleCountValue: 24
   _downsampling: 0
@@ -244,26 +244,14 @@ MonoBehaviour:
   _foregroundBlur: 1
   _visualize: 0
   _shader: {fileID: 4800000, guid: b99c58356816f7b46818fe7e788b2fa1, type: 3}
---- !u!114 &118794613
-MonoBehaviour:
+--- !u!45 &118794613
+Skybox:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 118794604}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a1e83ab3c6c9d7468fff9be485a1390, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _source: 1
-  _blendRatio: 1
-  _preferDepthNormals: 0
-  _depthRepeat: 1
-  _validateNormals: 0
-  _motionOverlayAmplitude: 10
-  _motionVectorsAmplitude: 50
-  _motionVectorsResolution: 16
-  _shader: {fileID: 4800000, guid: f104e85b3463c2748a02d2f07582fa63, type: 3}
+  m_CustomSkybox: {fileID: 2100000, guid: 9a9d353ce48022840b7841c46145000c, type: 2}
 --- !u!114 &118794614
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -275,23 +263,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10593b7d510b64560a297a8af1356dcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _colorTemp: 0.22
-  _colorTint: 0.07
+  _colorTemp: -0.37
+  _colorTint: 0.2
   _toneMapping: 1
-  _exposure: 1.79
-  _saturation: 1.21
+  _exposure: 1.48
+  _saturation: 1.09
   _rCurve:
     serializedVersion: 2
     m_Curve:
     - time: 0
       value: 0
-      inSlope: 0.9078946
-      outSlope: 0.9078946
+      inSlope: 0.6610942
+      outSlope: 0.6610942
       tangentMode: 0
     - time: 1
       value: 1
-      inSlope: 0.81521773
-      outSlope: 0.81521773
+      inSlope: 0.68864155
+      outSlope: 0.68864155
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -301,14 +289,14 @@ MonoBehaviour:
     m_Curve:
     - time: 0
       value: 0
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 10
+      inSlope: 1.263818
+      outSlope: 1.263818
+      tangentMode: 0
     - time: 1
       value: 1
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 10
+      inSlope: 1.2586796
+      outSlope: 1.2586796
+      tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
@@ -401,7 +389,7 @@ Light:
   serializedVersion: 7
   m_Type: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 0.45
+  m_Intensity: 0.5
   m_Range: 10
   m_SpotAngle: 30
   m_CookieSize: 10
@@ -431,10 +419,10 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 220633635}
-  m_LocalRotation: {x: 0.55403227, y: 0.2120122, z: -0.14845252, w: 0.79124016}
+  m_LocalRotation: {x: 0.13302222, y: 0.6330222, z: -0.111618884, w: 0.7544066}
   m_LocalPosition: {x: 0, y: 5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 70, y: 30, z: 0}
+  m_LocalEulerAnglesHint: {x: 20, y: 80, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -527,6 +515,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _target: {fileID: 1368714482}
   _template: {fileID: 11400000, guid: ccecb93095239df4dba3edea650dfbe2, type: 2}
+  _maxTimeStep: 0.006
+  _randomSeed: 0
   _length: 2
   _lengthRandomness: 0.5
   _spring: 600
@@ -535,8 +525,6 @@ MonoBehaviour:
   _noiseAmplitude: 5
   _noiseFrequency: 1
   _noiseSpeed: 0.1
-  _maxTimeStep: 0.006
-  _randomSeed: 0
   _kernels: {fileID: 4800000, guid: c91a1514fa253694b9c31e72a147c2e6, type: 3}
 --- !u!23 &1261623235
 MeshRenderer:
