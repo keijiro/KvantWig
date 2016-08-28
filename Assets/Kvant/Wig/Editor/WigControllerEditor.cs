@@ -20,6 +20,10 @@ namespace Kvant
         SerializedProperty _damping;
         SerializedProperty _gravity;
 
+        SerializedProperty _noiseAmplitude;
+        SerializedProperty _noiseFrequency;
+        SerializedProperty _noiseSpeed;
+
         static GUIContent _textRandomness = new GUIContent("Randomness");
 
         void OnEnable()
@@ -35,6 +39,10 @@ namespace Kvant
             _spring = serializedObject.FindProperty("_spring");
             _damping = serializedObject.FindProperty("_damping");
             _gravity = serializedObject.FindProperty("_gravity");
+
+            _noiseAmplitude = serializedObject.FindProperty("_noiseAmplitude");
+            _noiseFrequency = serializedObject.FindProperty("_noiseFrequency");
+            _noiseSpeed = serializedObject.FindProperty("_noiseSpeed");
         }
 
         public override void OnInspectorGUI()
@@ -68,6 +76,12 @@ namespace Kvant
             EditorGUILayout.PropertyField(_spring);
             EditorGUILayout.PropertyField(_damping);
             EditorGUILayout.PropertyField(_gravity);
+
+            EditorGUILayout.Space();
+
+            EditorGUILayout.PropertyField(_noiseAmplitude);
+            EditorGUILayout.PropertyField(_noiseFrequency);
+            EditorGUILayout.PropertyField(_noiseSpeed);
 
             // Edit mode: check changes at this point.
             if (!Application.isPlaying)

@@ -32,6 +32,15 @@ namespace Kvant
         Vector3 _gravity = new Vector3(0, -8, 2);
 
         [SerializeField]
+        float _noiseAmplitude = 5;
+
+        [SerializeField]
+        float _noiseFrequency = 1;
+
+        [SerializeField]
+        float _noiseSpeed = 0.1f;
+
+        [SerializeField]
         float _maxTimeStep = 0.006f;
 
         [SerializeField]
@@ -141,6 +150,9 @@ namespace Kvant
             _material.SetFloat("_Spring", _spring);
             _material.SetFloat("_Damping", _damping);
             _material.SetVector("_Gravity", _gravity);
+            _material.SetVector("_NoiseParams", new Vector3(
+                _noiseAmplitude, _noiseFrequency, _noiseSpeed
+            ));
             _material.SetFloat("_DeltaTime", dt);
         }
 

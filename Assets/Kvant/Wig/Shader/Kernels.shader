@@ -11,18 +11,30 @@ Shader "Hidden/Kvant/Wig/Kernels"
     CGINCLUDE
 
     #include "Common.cginc"
+    #include "SimplexNoiseGrad3D.cginc"
 
     float _RandomSeed;
     float2 _SegmentLength; // (length, randomness)
     float _Spring;
     float _Damping;
     float3 _Gravity;
+    float3 _NoiseParams; // (amplitude, frequency, speed)
     float _DeltaTime;
 
     float SegmentLength(float2 uv)
     {
         float r = frac((uv.x + _RandomSeed) * 632.8133);
         return _SegmentLength.x * (1 - r * _SegmentLength.y);
+    }
+
+    // Divergence-free noise field
+    float3 DFNoiseField(float3 p)
+    {
+        p *= _NoiseParams.y;
+        p += float3(0.9, 1.0, 1.1) * (_NoiseParams.z * _Time.y);
+        float3 n1 = snoise_grad(p);
+        float3 n2 = snoise_grad(p + float3(15.3, 13.1, 17.4));
+        return cross(n1, n2) * _NoiseParams.x;
     }
 
     float4 frag_InitPosition(v2f_img i) : SV_Target
@@ -93,6 +105,9 @@ Shader "Hidden/Kvant/Wig/Kernels"
 
         // Gravity
         v += _Gravity * _DeltaTime;
+
+        // Force from noise field
+        v += DFNoiseField(p) * _DeltaTime;
 
         return float4(v, 0);
     }
