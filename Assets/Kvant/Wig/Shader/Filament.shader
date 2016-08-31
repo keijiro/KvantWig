@@ -27,6 +27,17 @@ Shader "Kvant/Wig/Filament"
     SubShader
     {
         Tags { "RenderType"="Opaque" }
+        Pass
+        {
+            Tags { "LightMode" = "MotionVectors" }
+            ZWrite Off
+            CGPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+            #pragma target 3.0
+            #include "Motion.cginc"
+            ENDCG
+        }
         CGPROGRAM
         #pragma surface surf Standard vertex:vert nolightmap addshadow
         #pragma multi_compile _ UNITY_COLORSPACE_GAMMA

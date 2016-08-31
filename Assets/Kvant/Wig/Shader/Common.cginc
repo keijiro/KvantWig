@@ -4,6 +4,9 @@
 sampler2D _PositionBuffer;
 float4 _PositionBuffer_TexelSize;
 
+sampler2D _PreviousPositionBuffer;
+float4 _PreviousPositionBuffer_TexelSize;
+
 // Point velocity buffer (w is unused)
 sampler2D _VelocityBuffer;
 float4 _VelocityBuffer_TexelSize;
@@ -14,12 +17,22 @@ float4 _VelocityBuffer_TexelSize;
 sampler2D _BasisBuffer;
 float4 _BasisBuffer_TexelSize;
 
+sampler2D _PreviousBasisBuffer;
+float4 _PreviousBasisBuffer_TexelSize;
+
 // Foundation mesh data
 sampler2D _FoundationData;
 float4 _FoundationData_TexelSize;
 
 // Transformation of the foundation mesh
 float4x4 _FoundationTransform;
+
+// Filament thickness parameters
+half _Thickness;
+half _ThickRandom;
+
+// Seed for PRNG
+float _RandomSeed;
 
 // Hue to RGB convertion
 half3 HueToRGB(half h)
@@ -48,10 +61,20 @@ float3 StereoInverseProjection(float2 p)
 }
 
 // Sampling function for position buffer
+float3 SamplePosition(float2 uv)
+{
+    return tex2Dlod(_PositionBuffer, float4(uv, 0, 0)).xyz;
+}
+
 float3 SamplePosition(float2 uv, float delta)
 {
     uv.y += _PositionBuffer_TexelSize.y * delta;
     return tex2Dlod(_PositionBuffer, float4(uv, 0, 0)).xyz;
+}
+
+float3 SamplePreviousPosition(float2 uv)
+{
+    return tex2Dlod(_PreviousPositionBuffer, float4(uv, 0, 0)).xyz;
 }
 
 // Sampling function for velocity buffer
@@ -61,10 +84,20 @@ float3 SampleVelocity(float2 uv)
 }
 
 // Sampling function for basis buffer
+float4 SampleBasis(float2 uv)
+{
+    return tex2Dlod(_BasisBuffer, float4(uv, 0, 0));
+}
+
 float4 SampleBasis(float2 uv, float delta)
 {
     uv.y += _BasisBuffer_TexelSize.y * delta;
     return tex2Dlod(_BasisBuffer, float4(uv, 0, 0));
+}
+
+float4 SamplePreviousBasis(float2 uv)
+{
+    return tex2Dlod(_PreviousBasisBuffer, float4(uv, 0, 0));
 }
 
 // Encoder/decoder function for basis buffer
@@ -91,4 +124,12 @@ float3 SampleFoundationNormal(float2 uv)
 {
     float3 n = tex2Dlod(_FoundationData, float4(uv.x, 1, 0, 0)).xyz;
     return mul((float3x3)_FoundationTransform, n);
+}
+
+// Filament thickness function
+float Thickness(float2 uv)
+{
+    float t = _Thickness * (1 - uv.y * uv.y);
+    t *= 1 - _ThickRandom * frac((uv.x + _RandomSeed) * 893.8912);
+    return t;
 }

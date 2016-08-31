@@ -14,7 +14,6 @@ Shader "Hidden/Kvant/Wig/Kernels"
     #include "SimplexNoiseGrad3D.cginc"
 
     float _DeltaTime;
-    float _RandomSeed;
 
     float2 _SegmentLength; // (length, randomness)
 
@@ -79,7 +78,7 @@ Shader "Hidden/Kvant/Wig/Kernels"
         else
         {
             // Newtonian motion
-            float3 p = SamplePosition(i.uv, 0);
+            float3 p = SamplePosition(i.uv);
             p += SampleVelocity(i.uv) * _DeltaTime;
 
             // Segment length constraint
@@ -92,7 +91,7 @@ Shader "Hidden/Kvant/Wig/Kernels"
 
     float4 frag_UpdateVelocity(v2f_img i) : SV_Target
     {
-        float3 p = SamplePosition(i.uv, 0);
+        float3 p = SamplePosition(i.uv);
         float3 v = SampleVelocity(i.uv);
 
         // Damping

@@ -3,9 +3,6 @@
 half _Metallic;
 half _Smoothness;
 
-half _Thickness;
-half _ThickRandom;
-
 half3 _BaseColor;
 half _BaseRandom;
 
@@ -13,8 +10,6 @@ half _GlowIntensity;
 half _GlowProb;
 half3 _GlowColor;
 half _GlowRandom;
-
-float _RandomSeed;
 
 struct Input
 {
@@ -27,18 +22,11 @@ void vert(inout appdata_full v, out Input data)
 
     float2 uv = v.texcoord.xy;
 
-    // Point position
-    float3 p = SamplePosition(uv, 0);
-
     // Orthonormal basis vectors
-    float3x3 basis = DecodeBasis(SampleBasis(uv, 0));
+    float3x3 basis = DecodeBasis(SampleBasis(uv));
 
-    // Filament radius
-    float radius = _Thickness * (1 - uv.y * uv.y);
-    radius *= 1 - _ThickRandom * frac((uv.x + _RandomSeed) * 893.8912);
-
-    // Modify the vertex
-    v.vertex.xyz = p.xyz + mul(v.vertex, basis) * radius;
+    // Apply the local transformation and move to the sampled position.
+    v.vertex.xyz = SamplePosition(uv) + mul(v.vertex, basis) * Thickness(uv);
     v.normal = mul(v.normal, basis);
 
     // Parameters for the pixel shader

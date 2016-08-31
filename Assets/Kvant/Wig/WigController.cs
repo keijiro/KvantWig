@@ -246,7 +246,7 @@ namespace Kvant
         }
 
         // Do simulation.
-        void Simulate(float deltaTime)
+        int Simulate(float deltaTime)
         {
             var newTargetPosition = _target.position;
             var newTargetRotation = _target.rotation;
@@ -266,6 +266,24 @@ namespace Kvant
 
             _targetPosition = newTargetPosition;
             _targetRotation = newTargetRotation;
+
+            return steps;
+        }
+
+        // Update the material property block for the mesh renderer.
+        void UpdatePropertyBlock(float motionScale)
+        {
+            if (_propertyBlock == null)
+                _propertyBlock = new MaterialPropertyBlock();
+
+            _propertyBlock.SetTexture("_PositionBuffer", _positionBuffer2);
+            _propertyBlock.SetTexture("_PreviousPositionBuffer", _positionBuffer1);
+
+            _propertyBlock.SetTexture("_BasisBuffer", _basisBuffer2);
+            _propertyBlock.SetTexture("_PreviousBasisBuffer", _basisBuffer1);
+
+            _propertyBlock.SetFloat("_RandomSeed", _randomSeed);
+            _propertyBlock.SetFloat("_MotionScale", motionScale);
         }
 
         #endregion
@@ -301,6 +319,8 @@ namespace Kvant
 
         void LateUpdate()
         {
+            var motionScale = 1.0f;
+
             // Do nothing if something is missing.
             if (_template == null || _target == null) return;
 
@@ -311,22 +331,18 @@ namespace Kvant
                 ResetSimulationState();
 
                 // Do warmup in edit mode.
-                if (!Application.isPlaying) Simulate(0.4f);
+                if (!Application.isPlaying)
+                    motionScale = Simulate(0.4f);
 
                 _needsReset = false;
             }
 
             // Advance simulation time.
-            if (Application.isPlaying) Simulate(Time.deltaTime);
+            if (Application.isPlaying)
+                motionScale = Simulate(Time.deltaTime);
 
-            // Update the material property block of the mesh renderer.
-            if (_propertyBlock == null)
-                _propertyBlock = new MaterialPropertyBlock();
-
-            _propertyBlock.SetTexture("_PositionBuffer", _positionBuffer2);
-            _propertyBlock.SetTexture("_BasisBuffer", _basisBuffer2);
-            _propertyBlock.SetFloat("_RandomSeed", _randomSeed);
-
+            // Update and set the material property block to the mesh renderer.
+            UpdatePropertyBlock(motionScale);
             GetComponent<MeshRenderer>().SetPropertyBlock(_propertyBlock);
         }
 
