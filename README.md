@@ -16,7 +16,8 @@ realistic simulation.
 System Requirements
 -------------------
 
-Unity 5.4 or later
+- Unity 5.4 or later
+- Windows or Mac OS
 
 How To Apply This To My Own Model?
 ----------------------------------
@@ -26,8 +27,8 @@ the context menu, select "Kvant" -> "Wig" -> "Convert to template". This
 generates *Wig Template* file from the mesh. Give it to a WigController
 component. Then play it. Boom.
 
-Please keep the vertex count low. 500-1,000 would be good. In most cases,
-it requires separated low-poly model.
+The vertex count of the source model should be kept low because of 64k
+vertices limitation in Unity. 500-1,000 would be good.
 
 License
 -------
