@@ -12,37 +12,56 @@ namespace Kvant
 
         // Foundation settings
 
-        [SerializeField]
-        Transform _target;
+        [SerializeField] Transform _target;
 
         public Transform target {
             get { return _target; }
             set { _target = value; }
         }
 
-        [SerializeField]
-        WigTemplate _template;
+        [SerializeField] WigTemplate _template;
+
+        public WigTemplate template {
+            get { return _template; }
+            set {
+                if (_template != value) {
+                    _template = value;
+                    _reconfigured = true;
+                }
+            }
+        }
 
         // Constants
 
-        [SerializeField]
-        float _maxTimeStep = 0.006f;
+        [SerializeField] float _maxTimeStep = 0.006f;
 
-        [SerializeField]
-        float _randomSeed;
+        public float maxTimeStep {
+            get { return _maxTimeStep; }
+            set { _maxTimeStep = value; }
+        }
+
+        [SerializeField] float _randomSeed;
+
+        public float randomSeed {
+            get { return _randomSeed; }
+            set {
+                if (_randomSeed != value) {
+                    _randomSeed = value;
+                    _needsReset = true;
+                }
+            }
+        }
 
         // Filament length
 
-        [SerializeField, Range(0.01f, 5)]
-        float _length = 1;
+        [SerializeField, Range(0.01f, 5)] float _length = 1;
 
         public float length {
             get { return _length; }
             set { _length = value; }
         }
 
-        [SerializeField, Range(0, 1)]
-        float _lengthRandomness = 0.5f;
+        [SerializeField, Range(0, 1)] float _lengthRandomness = 0.5f;
 
         public float lengthRandomness {
             get { return _lengthRandomness; }
@@ -51,24 +70,21 @@ namespace Kvant
 
         // Dynamics
 
-        [SerializeField]
-        float _spring = 600;
+        [SerializeField] float _spring = 600;
 
         public float spring {
             get { return _spring; }
             set { _spring = value; }
         }
 
-        [SerializeField]
-        float _damping = 30;
+        [SerializeField] float _damping = 30;
 
         public float damping {
             get { return _damping; }
             set { _damping = value; }
         }
 
-        [SerializeField]
-        Vector3 _gravity = new Vector3(0, -8, 2);
+        [SerializeField] Vector3 _gravity = new Vector3(0, -8, 2);
 
         public Vector3 gravity {
             get { return _gravity; }
@@ -77,29 +93,44 @@ namespace Kvant
 
         // Noise field
 
-        [SerializeField]
-        float _noiseAmplitude = 5;
+        [SerializeField] float _noiseAmplitude = 5;
 
         public float noiseAmplitude {
             get { return _noiseAmplitude; }
             set { _noiseAmplitude = value; }
         }
 
-        [SerializeField]
-        float _noiseFrequency = 1;
+        [SerializeField] float _noiseFrequency = 1;
 
         public float noiseFrequency {
             get { return _noiseFrequency; }
             set { _noiseFrequency = value; }
         }
 
-        [SerializeField]
-        float _noiseSpeed = 0.1f;
+        [SerializeField] float _noiseSpeed = 0.1f;
 
         public float noiseSpeed {
             get { return _noiseSpeed; }
             set { _noiseSpeed = value; }
         }
+
+        #endregion
+
+        #region Public functions
+
+        public void ResetSimulation()
+        {
+            _needsReset = true;
+        }
+
+        #if UNITY_EDITOR
+
+        public void RequestReconfigurationFromEditor()
+        {
+            _reconfigured = true;
+        }
+
+        #endif
 
         #endregion
 
@@ -117,16 +148,16 @@ namespace Kvant
         RenderTexture _basisBuffer1;
         RenderTexture _basisBuffer2;
 
-        // Temporary objects for controlling other components
-        MeshFilter _meshFilter;
+        // Custom properties applied to the mesh renderer.
         MaterialPropertyBlock _propertyBlock;
 
         // Previous position/rotation of the target transform.
         Vector3 _targetPosition;
         Quaternion _targetRotation;
 
-        // Reset flag
-        bool _needsReset = true;
+        // Reset flags
+        bool _reconfigured = true;
+        bool _needsReset;
 
         // Create a buffer for simulation.
         RenderTexture CreateSimulationBuffer()
@@ -134,49 +165,53 @@ namespace Kvant
             var format = RenderTextureFormat.ARGBFloat;
             var width = _template.filamentCount;
             var buffer = new RenderTexture(width, _template.segmentCount, 0, format);
-            buffer.hideFlags = HideFlags.DontSave;
+            buffer.hideFlags = HideFlags.HideAndDontSave;
             buffer.filterMode = FilterMode.Point;
             buffer.wrapMode = TextureWrapMode.Clamp;
             return buffer;
         }
 
-        // Initialize private resources.
-        // Can be called multiple times.
-        void SetUpResources()
+        // Try to release a temporary object.
+        void ReleaseObject(Object o)
+        {
+            if (o != null)
+                if (Application.isPlaying)
+                    Destroy(o);
+                else
+                    DestroyImmediate(o);
+        }
+
+        // Create and initialize internal temporary objects.
+        void SetUpTemporaryObjects()
         {
             if (_material == null)
             {
                 var shader = Shader.Find("Hidden/Kvant/Wig/Kernels");
                 _material = new Material(shader);
-                _material.hideFlags = HideFlags.DontSave;
+                _material.hideFlags = HideFlags.HideAndDontSave;
             }
 
             _material.SetTexture("_FoundationData", _template.foundation);
             _material.SetFloat("_RandomSeed", _randomSeed);
 
-            if (_positionBuffer1 != null) DestroyImmediate(_positionBuffer1);
-            if (_positionBuffer2 != null) DestroyImmediate(_positionBuffer2);
-            if (_velocityBuffer1 != null) DestroyImmediate(_velocityBuffer1);
-            if (_velocityBuffer2 != null) DestroyImmediate(_velocityBuffer2);
-            if (_basisBuffer1 != null) DestroyImmediate(_basisBuffer1);
-            if (_basisBuffer2 != null) DestroyImmediate(_basisBuffer2);
+            if (_positionBuffer1 == null) _positionBuffer1 = CreateSimulationBuffer();
+            if (_positionBuffer2 == null) _positionBuffer2 = CreateSimulationBuffer();
+            if (_velocityBuffer1 == null) _velocityBuffer1 = CreateSimulationBuffer();
+            if (_velocityBuffer2 == null) _velocityBuffer2 = CreateSimulationBuffer();
+            if (_basisBuffer1 == null) _basisBuffer1 = CreateSimulationBuffer();
+            if (_basisBuffer2 == null) _basisBuffer2 = CreateSimulationBuffer();
+        }
 
-            _positionBuffer1 = CreateSimulationBuffer();
-            _positionBuffer2 = CreateSimulationBuffer();
-            _velocityBuffer1 = CreateSimulationBuffer();
-            _velocityBuffer2 = CreateSimulationBuffer();
-            _basisBuffer1 = CreateSimulationBuffer();
-            _basisBuffer2 = CreateSimulationBuffer();
-
-            _meshFilter = GetComponent<MeshFilter>();
-
-            if (_meshFilter == null)
-            {
-                _meshFilter = gameObject.AddComponent<MeshFilter>();
-                _meshFilter.hideFlags = HideFlags.NotEditable;
-            }
-
-            _meshFilter.sharedMesh = _template.mesh;
+        // Release internal temporary objects.
+        void ReleaseTemporaryObjects()
+        {
+            ReleaseObject(_material); _material = null;
+            ReleaseObject(_positionBuffer1); _positionBuffer1 = null;
+            ReleaseObject(_positionBuffer2); _positionBuffer2 = null;
+            ReleaseObject(_velocityBuffer1); _velocityBuffer1 = null;
+            ReleaseObject(_velocityBuffer2); _velocityBuffer2 = null;
+            ReleaseObject(_basisBuffer1); _basisBuffer1 = null;
+            ReleaseObject(_basisBuffer2); _basisBuffer2 = null;
         }
 
         // Reset the simulation state.
@@ -198,7 +233,9 @@ namespace Kvant
         // Update the parameters in the simulation kernels.
         void UpdateSimulationParameters(Vector3 pos, Quaternion rot, float dt)
         {
-            _material.SetMatrix("_FoundationTransform", Matrix4x4.TRS(pos, rot, Vector3.one));
+            _material.SetMatrix("_FoundationTransform",
+                Matrix4x4.TRS(pos, rot, Vector3.one)
+            );
 
             _material.SetFloat("_DeltaTime", dt);
 
@@ -270,9 +307,27 @@ namespace Kvant
             return steps;
         }
 
-        // Update the material property block for the mesh renderer.
-        void UpdatePropertyBlock(float motionScale)
+        // Update external components: mesh filter.
+        void UpdateMeshFilter()
         {
+            var meshFilter = GetComponent<MeshFilter>();
+
+            // Add a new mesh filter if missing.
+            if (meshFilter == null)
+            {
+                meshFilter = gameObject.AddComponent<MeshFilter>();
+                meshFilter.hideFlags = HideFlags.NotEditable;
+            }
+
+            if (meshFilter.sharedMesh != _template.mesh)
+                meshFilter.sharedMesh = _template.mesh;
+        }
+
+        // Update external components: mesh renderer.
+        void UpdateMeshRenderer(float motionScale)
+        {
+            var meshRenderer = GetComponent<MeshRenderer>();
+
             if (_propertyBlock == null)
                 _propertyBlock = new MaterialPropertyBlock();
 
@@ -284,37 +339,22 @@ namespace Kvant
 
             _propertyBlock.SetFloat("_RandomSeed", _randomSeed);
             _propertyBlock.SetFloat("_MotionScale", motionScale);
+
+            meshRenderer.SetPropertyBlock(_propertyBlock);
         }
 
         #endregion
-
-        #if UNITY_EDITOR
-        #region Editor functions
-
-        public void RequestResetFromEditor()
-        {
-            _needsReset = true;
-        }
-
-        #endregion
-        #endif
 
         #region MonoBehaviour functions
 
         void Reset()
         {
-            _needsReset = true;
+            _reconfigured = true;
         }
 
         void OnDestroy()
         {
-            if (_material != null) DestroyImmediate(_material);
-            if (_positionBuffer1 != null) DestroyImmediate(_positionBuffer1);
-            if (_positionBuffer2 != null) DestroyImmediate(_positionBuffer2);
-            if (_velocityBuffer1 != null) DestroyImmediate(_velocityBuffer1);
-            if (_velocityBuffer2 != null) DestroyImmediate(_velocityBuffer2);
-            if (_basisBuffer1 != null) DestroyImmediate(_basisBuffer1);
-            if (_basisBuffer2 != null) DestroyImmediate(_basisBuffer2);
+            ReleaseTemporaryObjects();
         }
 
         void LateUpdate()
@@ -324,26 +364,32 @@ namespace Kvant
             // Do nothing if something is missing.
             if (_template == null || _target == null) return;
 
-            // Reset/Initialization
-            if (_needsReset)
+            // - Initialize temporary objects at the first frame.
+            // - Re-initialize temporary objects on configuration changes.
+            if (_reconfigured)
             {
-                SetUpResources();
+                ReleaseTemporaryObjects();
+                SetUpTemporaryObjects();
+            }
+
+            // Reset simulation state when it's requested.
+            // This also happens when configuration changed.
+            if (_needsReset || _reconfigured)
+            {
                 ResetSimulationState();
 
-                // Do warmup in edit mode.
-                if (!Application.isPlaying)
-                    motionScale = Simulate(0.4f);
+                // Editor: do warmup before the first frame.
+                if (!Application.isPlaying) motionScale = Simulate(0.4f);
 
-                _needsReset = false;
+                _needsReset = _reconfigured = false;
             }
 
             // Advance simulation time.
-            if (Application.isPlaying)
-                motionScale = Simulate(Time.deltaTime);
+            if (Application.isPlaying) motionScale = Simulate(Time.deltaTime);
 
-            // Update and set the material property block to the mesh renderer.
-            UpdatePropertyBlock(motionScale);
-            GetComponent<MeshRenderer>().SetPropertyBlock(_propertyBlock);
+            // Update external components (mesh filter and renderer).
+            UpdateMeshFilter();
+            UpdateMeshRenderer(motionScale);
         }
 
         #endregion

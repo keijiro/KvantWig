@@ -55,24 +55,32 @@ namespace Kvant
             serializedObject.Update();
 
             bool needsReset = false;
+            bool reconfigured = false;
 
-            // Edit mode: check changes from here.
+            // VVV Check changes from here (needsReset; editor only) VVV
             if (!Application.isPlaying) EditorGUI.BeginChangeCheck();
 
             EditorGUILayout.PropertyField(_target);
 
-            // Play mode: check changes from here.
-            if (Application.isPlaying) EditorGUI.BeginChangeCheck();
+            // VVV Check changes from here (reconfigured) VVV
+            EditorGUI.BeginChangeCheck();
 
             EditorGUILayout.PropertyField(_template);
+
+            reconfigured = EditorGUI.EndChangeCheck();
+            // ^^^ Check changes to here (reconfigured) ^^^
 
             EditorGUILayout.Space();
 
             EditorGUILayout.PropertyField(_maxTimeStep);
+
+            // VVV Check changes from here (needsReset) VVV
+            EditorGUI.BeginChangeCheck();
+
             EditorGUILayout.PropertyField(_randomSeed);
 
-            // Play mode: check changes to here.
-            if (Application.isPlaying) needsReset = EditorGUI.EndChangeCheck();
+            needsReset |= EditorGUI.EndChangeCheck();
+            // ^^^ Check changes to here (needsReset) ^^^
 
             EditorGUILayout.Space();
 
@@ -94,15 +102,19 @@ namespace Kvant
             EditorGUILayout.PropertyField(_noiseFrequency, _textFrequency);
             EditorGUILayout.PropertyField(_noiseSpeed, _textSpeed);
 
-            // Edit mode: check changes to here.
-            if (!Application.isPlaying) needsReset = EditorGUI.EndChangeCheck();
+            if (!Application.isPlaying) needsReset |= EditorGUI.EndChangeCheck();
+            // ^^^ Check changes to here (needsReset; editor only) ^^^
 
             serializedObject.ApplyModifiedProperties();
 
-            // Request reset if there are any changes.
-            if (needsReset)
-                foreach (var t in targets)
-                    ((WigController)t).RequestResetFromEditor();
+            // Set reset flags if there are any changes.
+            if (needsReset || reconfigured) {
+                foreach (var t in targets) {
+                    var wig = (WigController)t;
+                    if (needsReset) wig.ResetSimulation();
+                    if (reconfigured) wig.RequestReconfigurationFromEditor();
+                }
+            }
         }
 
         #endregion
