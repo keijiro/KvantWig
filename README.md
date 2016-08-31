@@ -8,10 +8,10 @@ Kvant/Wig
 ![gif](http://67.media.tumblr.com/5da8793395bb79f91accd6b94e1a5a59/tumblr_ocmkinFTbU1qio469o2_400.gif)
 ![gif](http://67.media.tumblr.com/c0847f5efa9d8d3e066e85e5a1c26bc8/tumblr_ocmkinFTbU1qio469o3_400.gif)
 
-Note that this *never* becomes useful for realistic hair simulation. They're
-completely different things, and this one is not intended to be realistic!
-Please check [HairWorks][HairWorks] or something like that for realistic
-simulation.
+Note that this **never** becomes useful for realistic hair simulation.
+They're completely different things, and this one is not intended to be
+realistic! Please check [HairWorks][HairWorks] or something like that for
+realistic simulation.
 
 System Requirements
 -------------------
