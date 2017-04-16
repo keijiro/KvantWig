@@ -86,7 +86,6 @@ namespace Kino
                 _mesh.SetUVs(0, uvs);
                 _mesh.SetIndices(indices, MeshTopology.Lines, 0);
 
-                _mesh.Optimize();
                 _mesh.UploadMeshData(true);
 
                 // update the properties
