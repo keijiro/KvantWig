@@ -4,9 +4,11 @@ Kvant/Wig
 *Wig* is a special renderer that simulates and renders hair in a
 **non-realistic** fashion.
 
-![gif](http://66.media.tumblr.com/60fd5271645740b3c443bf9d9a9477fd/tumblr_ocmkinFTbU1qio469o1_400.gif)
-![gif](http://67.media.tumblr.com/5da8793395bb79f91accd6b94e1a5a59/tumblr_ocmkinFTbU1qio469o2_400.gif)
-![gif](http://67.media.tumblr.com/c0847f5efa9d8d3e066e85e5a1c26bc8/tumblr_ocmkinFTbU1qio469o3_400.gif)
+![gif](http://i.imgur.com/Mtznb1y.gif)
+![gif](http://i.imgur.com/61cZwQ7.gif)
+
+![screenshot](http://i.imgur.com/yIdGoXz.png)
+![screenshot](http://i.imgur.com/Mjr9BMy.png)
 
 Note that this **never** becomes useful for realistic hair simulation.
 They're completely different things, and this one is not intended to be
