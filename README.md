@@ -10,9 +10,10 @@ non-realistic fashion.
 ![screenshot](http://i.imgur.com/yIdGoXz.png)
 ![screenshot](http://i.imgur.com/Mjr9BMy.png)
 
-Note that this never becomes useful for realistic hair simulation. They're
+Note that this is never useful for realistic hair simulation. They're
 completely different things, and this one is not intended to be realistic.
-Please check [HairWorks] or something like that for realistic simulation.
+It's recommended to check [HairWorks] or similar technologies for realistic
+simulation.
 
 [HairWorks]: https://developer.nvidia.com/hairworks
 
